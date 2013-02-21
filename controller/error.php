@@ -1,6 +1,6 @@
 <?php
 
-namespace Slrfw\App\Front\Controller;
+namespace App\Front\Controller;
 
 
 class Error extends Main
@@ -57,7 +57,7 @@ class Error extends Main
                 echo 'Erreur !';
         }
     }
-    
+
     public function error404Action()
     {
         $page           = $this->_gabaritManager->getPage(
@@ -65,26 +65,26 @@ class Error extends Main
         );
         $this->_seo->setTitle($page->getMeta("titre"));
         $this->_seo->setDescription($page->getMeta("bal_descr"));
-        $request_url    = str_replace(\Slrfw\Library\Registry::get("url"), "", "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
+        $request_url    = str_replace(\Slrfw\Registry::get("url"), "", "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
         $request_url    = urldecode($request_url);
         $request_url    = strtolower($request_url);
         $request_url    = $this->_db->noAccent($request_url);
         $tab = preg_split("`[^a-z]+`", $request_url);
-        
+
         $trash = array(
             "html",
             "htm",
             "php",
         );
-        
+
         $tab = array_diff($tab, $trash);
-        
+
         foreach ($tab as $ii => $t) {
             if (mb_strlen($t) < 3) {
                 unset($tab[$ii]);
             }
         }
-        
+
         $this->_view->search = implode(" ", $tab);
     }
 

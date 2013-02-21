@@ -1,9 +1,9 @@
 <?php
 
 
-namespace Slrfw\App\Front\Controller;
+namespace App\Front\Controller;
 
-use Slrfw\Library\Registry;
+use Slrfw\Registry;
 
 /**
  * Class example of MainController with always call
@@ -13,7 +13,7 @@ use Slrfw\Library\Registry;
  * @author   Monnot Stéphane (Shin) <monnot.stephane@gmail.com>
  * @license  Licence Shin
  */
-class Main extends \Slrfw\Library\Controller {
+class Main extends \Slrfw\Controller {
 
     /**
      *
@@ -42,7 +42,7 @@ class Main extends \Slrfw\Library\Controller {
          *  = possibilité de voir le site sans tenir compte de la visibilité
          *
          */
-        $this->_utilisateurAdmin = new \Slrfw\Library\Session('back');
+        $this->_utilisateurAdmin = new \Slrfw\Session('back');
         $this->_view->utilisateurAdmin = $this->_utilisateurAdmin;
 
         if ($this->_utilisateurAdmin->isConnected() && $this->_ajax == FALSE) {
