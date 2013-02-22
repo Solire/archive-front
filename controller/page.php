@@ -1,8 +1,8 @@
 <?php
 
-namespace Slrfw\App\Front\Controller;
+namespace App\Front\Controller;
 
-use Slrfw\Library\Registry;
+use Slrfw\Registry;
 
 
 class Page extends Main
