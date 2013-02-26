@@ -65,8 +65,11 @@ class Main extends \Slrfw\Controller {
 
             $this->_gabaritManager->setModePrevisualisation($_SESSION["mode_previsualisation"]);
 
+            //Inclusion mercury editor pour l'édition des pages (middle office)
+            $this->_javascript->addLibrary('app/back/js/mercury/mercury_loader.js?src=' . $this->_url . 'app/back/js/mercury&pack=bundled&visible=false');
+
             //Inclusion Bootstrap twitter
-            $this->_javascript->addLibrary('back/js/bootstrap/bootstrap.min.js', false);
+            $this->_javascript->addLibrary('back/js/bootstrap/bootstrap.min.js');
             $this->_css->addLibrary('back/css/bootstrap/bootstrap.min.css', 'screen', false);
 
             $this->_view->site = Registry::get('project-name');
