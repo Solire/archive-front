@@ -86,7 +86,7 @@ class Page extends Main
 
         $this->_page = $this->_gabaritManager->previsu($_POST);
 
-        if (count($this->_pages) == 0) {
+        if (count($this->_pages) == 0 && $this->_page->getMeta("id") > 0) {
             $this->_pages = $this->_gabaritManager->getList(
                 $_POST['id_version'], $_POST['id_api'],
                 $this->_page->getMeta("id"), false, true, "ordre", "asc"

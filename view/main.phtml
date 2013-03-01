@@ -33,7 +33,7 @@ if ($this->seo->getUrlCanonical() != "") {
 <?php echo $this->css; ?>
 
 
-        <script src="js/jquery/jquery-1.7.min.js"></script>
+        <script type="text/javascript">window.jQuery || document.write('<script type="text/javascript" src="app/front/js/jquery/jquery-1.7.min.js"><\/script>')</script>
         <!--[if IE]>
             <script src="js/html5.js"></script>
         <![endif]-->
@@ -43,11 +43,11 @@ if ($this->seo->getUrlCanonical() != "") {
 
     </head>
     <body role="document">
-        <?php
-        if ($this->utilisateurAdmin->isConnected()) {
+<?php
+        if ($this->utilisateurAdmin->isConnected()  && !isset($_POST['id_gabarit'])) {
             $this->add("toolbar.phtml");
         }
-        ?>
+?>
 
 
         <header role="banner">
