@@ -43,11 +43,11 @@ if ($this->seo->getUrlCanonical() != "") {
 
     </head>
     <body role="document">
-        <?php
+<?php
         if ($this->utilisateurAdmin->isConnected()  && !isset($_POST['id_gabarit'])) {
             $this->add("toolbar.phtml");
         }
-        ?>
+?>
 
 
         <header role="banner">

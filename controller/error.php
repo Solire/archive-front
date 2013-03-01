@@ -65,7 +65,7 @@ class Error extends Main
         );
         $this->_seo->setTitle($page->getMeta("titre"));
         $this->_seo->setDescription($page->getMeta("bal_descr"));
-        $request_url    = str_replace(\Slrfw\Library\Registry::get("url"), "", "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
+        $request_url    = str_replace(\Slrfw\Registry::get("url"), "", "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
         $request_url    = urldecode($request_url);
         $request_url    = strtolower($request_url);
         $request_url    = $this->_db->noAccent($request_url);
