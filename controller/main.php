@@ -54,7 +54,7 @@ class Main extends \Slrfw\Controller {
         $this->_utilisateurAdmin = new \Slrfw\Session('back');
         $this->_view->utilisateurAdmin = $this->_utilisateurAdmin;
 
-        if ($this->_utilisateurAdmin->isConnected() && $this->_ajax == FALSE) {
+        if ($this->_utilisateurAdmin->isConnected() && $this->_ajax == FALSE && !isset($_POST['id_gabarit'])) {
             if (isset($_GET["mode_previsualisation"])) {
                 $_SESSION["mode_previsualisation"] = (bool) $_GET["mode_previsualisation"];
             }
