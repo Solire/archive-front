@@ -152,7 +152,7 @@ function loadScript(src) {
                 allowedMimeTypes: ['image/jpeg', 'image/gif', 'image/png'],
                 maxFileSize: 1235242880,
                 inputName: 'file',
-                url: '<?php echo $this->url; ?>back/media/upload.html?id_gab_page=<?php echo $this->page->getMeta("id") ?>;',
+                url: '<?php echo $this->url; ?>back/media/upload.html?id_gab_page=<?php echo $this->page->getMeta("id") ?>',
                 handler: false
             };
             Mercury.PageEditor.prototype.save = function() {
