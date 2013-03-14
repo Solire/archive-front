@@ -133,4 +133,3 @@ class Sitemap extends Main {
 
 }
 
-?>
