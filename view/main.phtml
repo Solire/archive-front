@@ -17,7 +17,8 @@
         <meta name="msvalidate.01" content="" />
         <meta name="y_key" content="" />
         <meta name="google-site-verification" content="" />
-        <meta name="author" content="Solire" />
+        <meta name="publisher" content="" />
+        <meta name="author" content="" />
         <base href="<?php echo $this->url; ?>" />
 
 <?php
@@ -42,7 +43,7 @@ if ($this->seo->getUrlCanonical() != "") {
 
 
     </head>
-    <body role="document">
+    <body role="document"  itemscope itemtype="http://schema.org/WebPage">
 <?php
         if ($this->utilisateurAdmin->isConnected()  && !isset($_POST['id_gabarit'])) {
             $this->add("toolbar.phtml");
