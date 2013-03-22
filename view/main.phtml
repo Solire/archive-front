@@ -14,11 +14,10 @@
         <meta name="robots" content="<?php echo $this->seo->getIndex(); ?>index, <?php echo $this->seo->getFollow(); ?>follow, all" />
         <meta name="googlebot" content="<?php echo $this->seo->getIndex(); ?>index, <?php echo $this->seo->getFollow(); ?>follow, all" />
 
-        <meta name="msvalidate.01" content="" />
-        <meta name="y_key" content="" />
-        <meta name="google-site-verification" content="" />
-        <meta name="publisher" content="" />
-        <meta name="author" content="" />
+        <meta name="google-site-verification" content="<?php echo $this->mainPage["element_commun"]->getValues("code_google_webmaster_tools"); ?>" />
+        <meta name="msvalidate.01" content="<?php echo $this->mainPage["element_commun"]->getValues("code_bing_webmaster_tools"); ?>" />
+        <meta name="publisher" content="<?php echo $this->mainPage["element_commun"]->getValues("publisher"); ?>" />
+        <meta name="author" content="<?php echo $this->seo->getAuthor(); ?>" />
         <base href="<?php echo $this->url; ?>" />
 
 <?php
@@ -71,18 +70,8 @@ if ($this->seo->getUrlCanonical() != "") {
 
         <script type="text/javascript">
 
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', '<?php echo $this->google_analytics; ?>']);
-            _gaq.push(['_setDomainName', 'none']);
-            _gaq.push(['_setAllowLinker', true]);
-            _gaq.push(['_trackPageview']);
-
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-
+            <?php echo $this->mainPage["element_commun"]->getValues("code_google_analytics"); ?>
+                
         </script>
     </body>
 </html>

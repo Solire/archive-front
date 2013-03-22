@@ -62,6 +62,7 @@ class Page extends Main
         $this->_seo->setDescription($this->_page->getMeta("bal_descr"));
         $this->_seo->addKeyword($this->_page->getMeta("bal_key"));
         $this->_seo->setUrlCanonical($this->_page->getMeta("canonical"));
+        $this->_seo->setAuthor($this->_page->getMeta("author"));
         if ($this->_page->getMeta("no_index"))
             $this->_seo->disableIndex();
 
