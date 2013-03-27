@@ -77,21 +77,6 @@ class Main extends \Slrfw\Controller {
 
         }
 
-
-        /** EXEMPLE DE RECUPERATION DES RUBRIQUE parent et leurs enfants */
-        $this->_rubriques = $this->_gabaritManager->getList(ID_VERSION, ID_API, 0, array(3, 4, 5), TRUE);
-        foreach ($this->_rubriques as $ii => $rubrique) {
-            $pages = $this->_gabaritManager->getList(ID_VERSION, ID_API, $rubrique->getMeta('id'), FALSE, 1);
-            $rubrique->setChildren($pages);
-
-            foreach ($pages as $page) {
-                $firstChild = $this->_gabaritManager->getFirstChild(ID_VERSION, $page->getMeta('id'));
-                if ($firstChild)
-                    $page->setFirstChild($firstChild);
-            }
-        }
-        $this->_view->rubriques = $this->_rubriques;
-
         //Recupération des gabarits main
         $this->_view->mainPage = $this->_gabaritManager->getMain(ID_VERSION, ID_API);
 
