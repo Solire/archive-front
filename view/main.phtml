@@ -44,8 +44,8 @@ if ($this->seo->getUrlCanonical() != "") {
     </head>
     <body role="document"  itemscope itemtype="http://schema.org/WebPage">
 <?php
-        if ($this->utilisateurAdmin->isConnected()  && !isset($_POST['id_gabarit'])) {
-            $this->add("toolbar.phtml");
+        if ($this->utilisateurAdmin->isConnected()) {
+            $this->add("middleoffice/toolbar.phtml");
         }
 ?>
 
