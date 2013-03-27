@@ -12,9 +12,15 @@ class Page extends Main
 
     /**
      *
-     * @var page
+     * @var \Slrfw\Model\gabaritPage
      */
     private $_page = null;
+    
+    /**
+     *
+     * @var \Slrfw\Model\gabaritManagerOptimized
+     */
+    protected $_gabaritManager;
 
     /**
      * Accepte les rewritings
