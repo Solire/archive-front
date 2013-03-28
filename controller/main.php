@@ -25,7 +25,7 @@ class Main extends \Slrfw\Controller {
      *
      * @var \Slrfw\Model\gabaritManagerOptimized
      */
-    protected $_gabaritManager;
+    public  $_gabaritManager;
 
     /**
      * Always execute before other method in controller
