@@ -93,4 +93,12 @@ class Main extends \Slrfw\Controller {
 
     }
 
+
+    public function shutdown()
+    {
+        parent::shutdown();
+        /** Chargement des executions automatiques **/
+        $this->loadExec('shutdown');
+    }
+
 }
