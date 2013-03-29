@@ -19,6 +19,7 @@
             })
             $selectImage.bind("change", function() {
                 var value = $(this).val()
+                $selectImage.parents("form:first").find(".previsu").attr("href", value)
                 $selectImage.parents("form:first").find("#media_image_url").val(value)
             })
 
