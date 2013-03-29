@@ -84,9 +84,8 @@
                     loadCss("app/back/css/crop.css")
 
                     $("#back-toolbar-container").css({"width" : "100%", "z-index" : "20000", "position" : "fixed"}).load("middleoffice/toolbarback.html?id_gab_page=" + <?php echo $this->page->getMeta("id") ?>, function() {
-                        loadScript("app/back/js/crop_front.js", function() {
-                            cloneModalCrop.appendTo("body")
-                        })
+                        cloneModalCrop.appendTo("body")
+                        loadScript("app/back/js/crop_front.js")
                     })
 //                  $("<iframe>", {
 //                seamless: 'true',
