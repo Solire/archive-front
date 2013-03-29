@@ -6,44 +6,46 @@
     var head = document.getElementsByTagName("head")[0];
 
     function loadSelectImages(element) {
-        
-        
-        $.get("back/media/autocomplete.html?id_gab_page=<?php echo $this->page->getMeta("id") ?>", function(data) {
-                    $selectImage = $(element).find(".media_image_list")
-                    $selectImage.empty().append('<option></option>');
-                    $inputImage = $selectImage.parents("form:first").find("#media_image_url")
-                    $.each(data, function(id, item) {
-                        var beforeLastSlash = item.path.lastIndexOf("/", item.path.lastIndexOf("/")-1)+1
-                        var selected = $inputImage.val() == item.path.substr(beforeLastSlash) ? 'selected="selected"' : '';
-                        $selectImage.append('<option ' + selected + ' value="' + item.path.substr(beforeLastSlash)  + '">' + item.label + ' (' + item.size + ')</option>');
-                    })
-                    $selectImage.bind("change", function() {
-                        var value  = $(this).val()
-                        $selectImage.parents("form:first").find("#media_image_url").val(value)
-                    })
 
-                }, "json")
+
+        $.get("back/media/autocomplete.html?id_gab_page=<?php echo $this->page->getMeta("id") ?>", function(data) {
+            $selectImage = $(element).find(".media_image_list")
+            $selectImage.empty().append('<option></option>');
+            $inputImage = $selectImage.parents("form:first").find("#media_image_url")
+            $.each(data, function(id, item) {
+                var beforeLastSlash = item.path.lastIndexOf("/", item.path.lastIndexOf("/") - 1) + 1
+                var selected = $inputImage.val() == item.path.substr(beforeLastSlash) ? 'selected="selected"' : '';
+                $selectImage.append('<option ' + selected + ' value="' + item.path.substr(beforeLastSlash) + '">' + item.label + ' (' + item.size + ')</option>');
+            })
+            $selectImage.bind("change", function() {
+                var value = $(this).val()
+                $selectImage.parents("form:first").find("#media_image_url").val(value)
+            })
+
+        }, "json")
     }
     function loadCss(src) {
         var link = document.createElement('link');
-          link.href = src;
-          link.media = 'screen';
-          link.rel = 'stylesheet';
-          link.type = 'text/css';
-          head.appendChild(link);
-        }
-function loadScript(src) {
-          var script = document.createElement('script');
-          script.src = src;
-          script.type = 'text/javascript';
-          script.charset = 'utf-8';
-          head.appendChild(script);
-          script.onload = function() {
-              document.body.style.visibility = 'visible';
-              document.body.style.display = 'block';
-
-          };
-        }
+        link.href = src;
+        link.media = 'screen';
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        head.appendChild(link);
+    }
+    function loadScript(src, callback) {
+        var script = document.createElement('script');
+        script.src = src;
+        script.type = 'text/javascript';
+        script.charset = 'utf-8';
+        head.appendChild(script);
+        script.onload = function() {
+            document.body.style.visibility = 'visible';
+            document.body.style.display = 'block';
+            if (callback && typeof(callback) === "function") { 
+                callback();  
+            }
+        };
+    }
     $(function() {
 
 
@@ -63,11 +65,34 @@ function loadScript(src) {
             }
 
             if ($(element).attr("id") == "mercury_iframe") {
-                $(element).ready(function (){
-                  $("<iframe>", {
-                seamless: 'true',
-                frameborder: '0'}).css("width", "100%").attr("src", "middleoffice/toolbarback.html?id_gab_page=" + <?php echo $this->page->getMeta("id") ?>).prependTo(document.body)
-                  $(element).css("top", "40px");
+
+
+                $(element).ready(function() {
+                    $(".mercury-toolbar-container").before('<div id="back-toolbar-container"></div>')
+                    
+                    loadScript("app/back/js/jquery/jquery-ui-1.8.23.custom.min.js")
+                    loadScript("app/back/js/bootstrap/bootstrap.min.js?admin")
+                    loadScript("app/back/js/jquery/jcrop/jquery.Jcrop.min.js")
+                    loadScript("app/back/js/jquery/ui.spinner.min.js")
+                    
+
+                    loadCss("app/back/css/jcrop/jquery.Jcrop.min.css")
+                    loadCss("app/back/css/jquery-ui-1.8.7.custom.css")
+                    loadCss("app/back/css/bootstrap/bootstrap-responsive.min.css")
+                    loadCss("app/back/css/bootstrap/bootstrap.min.css")
+                    loadCss("app/back/css/ui.spinner.css")
+                    loadCss("app/back/css/crop.css")
+
+                    $("#back-toolbar-container").css({"width" : "100%", "z-index" : "20000", "position" : "fixed"}).load("middleoffice/toolbarback.html?id_gab_page=" + <?php echo $this->page->getMeta("id") ?>, function() {
+                        loadScript("app/back/js/crop_front.js", function() {
+                            cloneModalCrop.appendTo("body")
+                            loadScript("app/back/js/bootstrap/bootstrap.min.js?admin")
+                        })
+                    })
+//                  $("<iframe>", {
+//                seamless: 'true',
+//                frameborder: '0'}).css("width", "100%").attr("src", "middleoffice/toolbarback.html?id_gab_page=" + <?php echo $this->page->getMeta("id") ?>).prependTo(document.body)
+                    $(element).css("top", "40px");
                 })
             }
 
@@ -76,11 +101,11 @@ function loadScript(src) {
                     $selectLink = $(element).find(".media_link_list")
                     $selectLink.empty().append('<option></option>');
                     $.each(data, function(id, item) {
-                        $selectLink.append('<option value="' + item.path  + '">' + item.title + '</option>');
+                        $selectLink.append('<option value="' + item.path + '">' + item.title + '</option>');
                     })
 
                     $selectLink.bind("change", function() {
-                        var value  = $(this).val()
+                        var value = $(this).val()
                         $selectLink.parents("form:first").find("#link_external_url").val(value)
                     })
 
@@ -110,41 +135,27 @@ function loadScript(src) {
                 maxFileSize: 1235242880,
                 inputName: 'file',
                 url: '<?php echo $this->url; ?>back/media/upload.html?id_gab_page=<?php echo $this->page->getMeta("id") ?>',
-                handler: false
-            };
-            Mercury.PageEditor.prototype.save = function() {
-                var data = this.serialize();
-                data.id_gab_page = {value: <?php echo $this->page->getMeta("id") ?>};
-                data.id_version = {value: <?php echo $this->page->getMeta("id_version") ?>};
-                data.id_gabarit = {value: <?php echo $this->page->getMeta("id_gabarit") ?>};
-                data.id_api = {value: <?php echo $this->page->getMeta("id_api") ?>};
-                var lightview = Mercury.lightview(null, {title: 'Enregistrement en cours, veuillez patientez ...', closeButton: true});
-                setTimeout(function() {
-                    $.post('<?php echo $this->url; ?>back/page/save.html?edit-front=1', {content: top.JSON.stringify(data, null)}, function() {
-                        lightview.loadContent('<div style="width:500px">La page a été enregistrée avec succès</div>');
-                        javascript:toggleMercury()
-                    });
-                }, 500);
-            }
+                                handler: false
+                            };
+                            Mercury.PageEditor.prototype.save = function() {
+                                var data = this.serialize();
+                                data.id_gab_page = {value: <?php echo $this->page->getMeta("id") ?>};
+                                data.id_version = {value: <?php echo $this->page->getMeta("id_version") ?>};
+                                data.id_gabarit = {value: <?php echo $this->page->getMeta("id_gabarit") ?>};
+                                data.id_api = {value: <?php echo $this->page->getMeta("id_api") ?>};
+                                var lightview = Mercury.lightview(null, {title: 'Enregistrement en cours, veuillez patientez ...', closeButton: true});
+                                setTimeout(function() {
+                                    $.post('<?php echo $this->url; ?>back/page/save.html?edit-front=1', {content: top.JSON.stringify(data, null)}, function() {
+                                        lightview.loadContent('<div style="width:500px">La page a été enregistrée avec succès</div>');
+                                        javascript:toggleMercury()
+                                    });
+                                }, 500);
+                            }
 
 //        loadScript("back/js/jquery/jquery-1.8.0.min.js")
-        loadScript("app/back/js/jquery/jquery-ui-1.8.23.custom.min.js")
-        loadScript("app/back/js/bootstrap/bootstrap.min.js")
-        loadScript("app/back/js/jquery/jcrop/jquery.Jcrop.min.js")
-        loadScript("app/back/js/jquery/ui.spinner.min.js")
-        loadScript("app/back/js/crop_front.js")
 
-        loadCss("app/back/css/jcrop/jquery.Jcrop.min.css")
-        loadCss("app/back/css/jquery-ui-1.8.7.custom.css")
-        loadCss("app/back/css/bootstrap/bootstrap-responsive.min.css")
-        loadCss("app/back/css/bootstrap/bootstrap.min.css")
-        loadCss("app/back/css/ui.spinner.css")
-        loadCss("app/back/css/crop.css")
-
-        cloneModalCrop.appendTo("body")
-
-        }
-    }
+                        }
+                    }
 </script>
 
 

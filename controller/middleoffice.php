@@ -50,10 +50,9 @@ class Middleoffice extends \Slrfw\Controller
     public function toolbarbackAction()
     {
         $this->_view->utilisateurAdmin = $this->_utilisateurAdmin;
-        if ($this->_utilisateurAdmin->isConnected() && $this->_ajax == FALSE) {
+        if ($this->_utilisateurAdmin->isConnected()) {
             $this->_view->site = Registry::get('project-name');
             $this->_view->modePrevisualisation = $_SESSION["mode_previsualisation"];
-
         }
         $this->_view->main(false);
         $this->_javascript->addLibrary('back/js/bootstrap/bootstrap.min.js');
