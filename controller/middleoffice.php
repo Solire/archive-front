@@ -62,11 +62,21 @@ class Middleoffice extends \Slrfw\Controller
     }
     
     /**
-     * Toujours executé avant l'action.
+     * Dialog pour la configuration des images
      *
      * @return void
      */
     public function imageconfiguratorAction()
+    {
+        $this->_view->main(false);
+    }
+    
+    /**
+     * Dialog pour la modification des zones HTML
+     *
+     * @return void
+     */
+    public function htmleditorAction()
     {
         $this->_view->main(false);
     }
