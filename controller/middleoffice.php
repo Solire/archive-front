@@ -20,7 +20,7 @@ class Middleoffice extends \Slrfw\Controller
      *
      * @var \Slrfw\Model\gabaritManagerOptimized
      */
-    protected $_gabaritManager;
+    public $_gabaritManager;
 
     /**
      * Accepte les rewritings
