@@ -47,29 +47,17 @@
                     $.each(files, function(i, file) {
                         var tr, td;
                         if (!file.error) {
-//                            tr = $('<tr>');
-//                            $('<td>', {
-//                                colspan: 4
-//                            }).html(file.name + '<div class="progressbar"></div>').appendTo(tr);
-//                            file.tr = tr;
+
                         }
                         else
                             uploader.splice(i, 1);
                     });
 
                     $.each(files, function(i, file) {
-//                        if (!file.error) {
-//                            if (i == 0) {
-//                                file.tr.prependTo($('#foldercontent'));
-//                            } else {
-//                                file.tr.insertAfter(files[i - 1].tr);
-//                            }
-//                        }
+
                     });
 
-//                    $('.progressbar').progressbar({
-//                        value: 0
-//                    });
+
 
                     up.refresh();
                     up.start();
@@ -86,42 +74,6 @@
 
                 uploader.bind('FileUploaded', function(up, file, info) {
 
-//                    $(file.tr, '.progressbar').progressbar("destroy");
-//
-//                    var response = $.parseJSON(info.response);
-//
-//                    if (response.status != "error") {
-//                        if ('id_temp' in response) {
-//                            $('input[name=id_temp]:first').val(response.id_temp);
-//                            $.cookie("id_temp", response.id_temp, {
-//                                path: '/'
-//                            });
-//                        }
-//
-//                        $('.atelecharger-' + file.id).val(response.filename);
-//
-//                        var ligne = '';
-//
-//                        ligne += '<td><a href="' + response.url + '" id="fileid_' + response.id + '" target="_blank" class="previsu">';
-//
-//                        var ext = file.name.split('.').pop().toLowerCase();
-//                        if ($.inArray(ext, extensionsImage) != -1) {
-//                            ligne += '<img class="vignette img-polaroid" src="' + response.mini_url + '" alt="' + ext + '" /></a></td>';
-//                        } else {
-//                            ligne += '<img class="vignette" src="app/back/img/filetype/' + ext + '.png" alt="' + ext + '" /></a></td>';
-//                        }
-//
-//                        ligne += '<td>' + response.size + '</td>';
-//                        ligne += '<td>' + response.date.substr(0, 10) + '<br />' + response.date.substr(11) + '</td>';
-//                        ligne += '<td><div class="btn-a gradient-blue"><a target="_blank" href="' + response.path + '" class="previsu"><img alt="Voir" src="app/back/img/voir.png" /></a></a></td>';
-//
-//                        file.tr.attr("id", "fileid_" + response.id);
-//                        file.tr.html(ligne);
-//                    }
-//                    else {
-//                        file.tr.remove();
-//                    }
-//
                     uploader.splice(0, 1);
                     if (uploader.files.length == 0) {
                         loadSelectImages($("#mercury_media:first")[0])
@@ -208,9 +160,8 @@
 
             if ($(element).attr("id") == "mercury_iframe") {
 
-
                 $(element).ready(function() {
-                    $(".mercury-toolbar-container").before('<div id="back-toolbar-container"></div>')
+                    $("#mercury_iframe").after('<div id="back-toolbar-container"></div>')
 
                     loadScript("app/back/js/jquery/jquery-ui-1.8.23.custom.min.js")
                     loadScript("app/back/js/bootstrap/bootstrap.min.js?admin")
@@ -227,6 +178,7 @@
 
                     $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html?id_gab_page=" + <?php echo $this->page->getMeta("id") ?>, function() {
                         cloneModalCrop.appendTo("body")
+                        
                         loadScript("app/back/js/crop_front.js")
                     })
 //                  $("<iframe>", {
