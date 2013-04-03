@@ -164,9 +164,9 @@ class Page extends Main
             ID_VERSION, ID_API, $this->_page->getMeta("id"), false, true, "ordre", "asc"
         );
 
-        if ($this->_page->getGabarit()->getName() == "produits_page"
-            || $this->_page->getGabarit()->getName() == "produits_sous_sous_rub"
-        ) {
+
+        $categoryIds = explode(',', $this->_appConfig->get('category', 'allDisplayIds'));
+        if (in_array($this->_page->getGabarit()->getId(), $categoryIds)) {
             foreach ($this->_pages as $ii => $page) {
                 $this->_pages[$ii] = $this->_gabaritManager->getPage(
                     ID_VERSION, ID_API, $page->getMeta("id"), 0, true, true
