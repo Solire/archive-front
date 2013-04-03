@@ -57,8 +57,12 @@ class Middleoffice extends \Slrfw\Controller
         $this->_view->main(false);
         $this->_javascript->addLibrary('back/js/bootstrap/bootstrap.min.js');
         $this->_css->addLibrary('back/css/bootstrap/bootstrap.min.css', 'screen', false);
-        $this->_page = $this->_gabaritManager->getPage(ID_VERSION, ID_API, $_GET["id_gab_page"]);
-        $this->_view->page = $this->_page;
+        if (isset($_GET["id_gab_page"]) && intval($_GET["id_gab_page"]) > 0) {
+            $this->_page = $this->_gabaritManager->getPage(ID_VERSION, ID_API, intval($_GET["id_gab_page"]));
+            $this->_view->page = $this->_page;
+        }
+        
+        
     }
     
     /**

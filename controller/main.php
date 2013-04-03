@@ -71,8 +71,6 @@ class Main extends \Slrfw\Controller {
 
             $this->_gabaritManager->setModePrevisualisation($_SESSION["mode_previsualisation"]);
 
-            //Inclusion mercury editor pour l'édition des pages (middle office)
-            $this->_javascript->addLibrary('app/back/js/mercury/mercury_loader.js?src=' . $this->_url . 'app/back/js/mercury&pack=bundled&visible=false');
 
             $this->_view->site = Registry::get('project-name');
             $this->_view->modePrevisualisation = $_SESSION["mode_previsualisation"];
