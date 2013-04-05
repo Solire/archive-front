@@ -4,20 +4,21 @@
 <!--[if IE 8]>         <html lang="<?php echo strtolower(SUF_VERSION); ?>" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="<?php echo strtolower(SUF_VERSION); ?>" class="no-js"> <!--<![endif]-->
     <head>
+        <meta charset="UTF-8" />
         <title><?php echo $this->seo->getTitle(); ?></title>
         <meta name="description" content="<?php echo $this->seo->getDescription(); ?>" />
         <meta name="keywords" lang="<?php echo strtolower(SUF_VERSION); ?>" content="<?php echo $this->seo->showKeywords(); ?>" />
 
 
-        <meta charset="UTF-8" />
         <meta name="language" content="<?php echo strtolower(SUF_VERSION); ?>" />
         <meta name="robots" content="<?php echo $this->seo->getIndex(); ?>index, <?php echo $this->seo->getFollow(); ?>follow, all" />
         <meta name="googlebot" content="<?php echo $this->seo->getIndex(); ?>index, <?php echo $this->seo->getFollow(); ?>follow, all" />
 
         <meta name="google-site-verification" content="<?php echo $this->mainPage["element_commun"]->getValues("code_google_webmaster_tools"); ?>" />
         <meta name="msvalidate.01" content="<?php echo $this->mainPage["element_commun"]->getValues("code_bing_webmaster_tools"); ?>" />
-        <meta name="publisher" content="<?php echo $this->mainPage["element_commun"]->getValues("publisher"); ?>" />
-        <meta name="author" content="<?php echo $this->seo->getAuthor(); ?>" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Solire" />
+        <link rel="author" href="<?php echo $this->seo->getAuthor(); ?>" title="" type="text/html">
         <base href="<?php echo $this->url; ?>" />
 
 <?php
@@ -62,8 +63,7 @@ if ($this->seo->getUrlCanonical() != "") {
 
 
         <footer>
-
-
+            <a target="_blank" rel="publisher" href="https://plus.google.com/<?php echo $this->mainPage["element_commun"]->getValues("publisher"); ?>"><?php echo $this->mainPage["element_commun"]->getValues("publisher_nom"); ?></a>
         </footer>
         <!-- End footer -->
 
