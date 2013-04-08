@@ -18,7 +18,13 @@
         <meta name="msvalidate.01" content="<?php echo $this->mainPage["element_commun"]->getValues("code_bing_webmaster_tools"); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content="Solire" />
-        <link rel="author" href="<?php echo $this->seo->getAuthor(); ?>" title="" type="text/html">
+<?php
+if($this->seo->getAuthor() != "") {
+?>
+        <link rel="author" href="https://plus.google.com/<?php echo $this->seo->getAuthor(); ?>" title="<?php echo $this->seo->getAuthorName(); ?>" type="text/html">
+<?php
+}
+?>
         <base href="<?php echo $this->url; ?>" />
 
 <?php
@@ -63,7 +69,14 @@ if ($this->seo->getUrlCanonical() != "") {
 
 
         <footer>
-            <a target="_blank" rel="publisher" href="https://plus.google.com/<?php echo $this->mainPage["element_commun"]->getValues("publisher"); ?>"><?php echo $this->mainPage["element_commun"]->getValues("publisher_nom"); ?></a>
+<?php
+if($this->mainPage["element_commun"]->getValues("publisher") != "") {
+?>
+        <a target="_blank" rel="publisher" href="https://plus.google.com/<?php echo $this->mainPage["element_commun"]->getValues("publisher"); ?>"><?php echo $this->mainPage["element_commun"]->getValues("publisher_nom"); ?></a>
+<?php
+
+}
+?>
         </footer>
         <!-- End footer -->
 

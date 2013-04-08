@@ -62,7 +62,17 @@ class Page extends Main
         $this->_seo->setDescription($this->_page->getMeta("bal_descr"));
         $this->_seo->addKeyword($this->_page->getMeta("bal_key"));
         $this->_seo->setUrlCanonical($this->_page->getMeta("canonical"));
-        $this->_seo->setAuthor($this->_page->getMeta("author"));
+        if ($this->_page->getMeta("author") > 0) {
+            $authors = $this->_view->mainPage["element_commun"]->getBlocs("author_google")->getValues();
+            foreach ($authors as $author) {
+                if($author["id"] == $this->_page->getMeta("author")) {
+                    $this->_seo->setAuthor($author["compte_google"]);
+                    $this->_seo->setAuthorName($author["nom_de_lauteur"]);
+                    break;
+                }
+            }
+        }
+        
         if ($this->_page->getMeta("no_index"))
             $this->_seo->disableIndex();
 
