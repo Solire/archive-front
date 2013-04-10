@@ -8,13 +8,13 @@ use Slrfw\Registry;
 class Page extends Main
 {
 
-    private $_cache = null;
+    protected $_cache = null;
 
     /**
      *
      * @var \Slrfw\Model\gabaritPage
      */
-    private $_page = null;
+    protected $_page = null;
 
     /**
      * Accepte les rewritings
@@ -72,7 +72,7 @@ class Page extends Main
                 }
             }
         }
-        
+
         if ($this->_page->getMeta("no_index"))
             $this->_seo->disableIndex();
 
@@ -90,7 +90,7 @@ class Page extends Main
     }
 
 
-    private function _previsu()
+    protected function _previsu()
     {
         $first = TRUE;
         $this->_pages = array();
@@ -123,7 +123,7 @@ class Page extends Main
         }
     }
 
-    private function _display()
+    protected function _display()
     {
         if (empty($this->rew)) {
             $this->rew[] = 'accueil';
