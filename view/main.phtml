@@ -51,7 +51,7 @@ if ($this->seo->getUrlCanonical() != "") {
     </head>
     <body role="document"  itemscope itemtype="http://schema.org/WebPage">
 <?php
-        if ($this->utilisateurAdmin->isConnected()) {
+        if ($this->utilisateurAdmin->isConnected() && !$this->_view->modePrevisuPage) {
             $this->add("middleoffice/toolbar.phtml");
         }
 ?>
@@ -84,7 +84,7 @@ if($this->mainPage["element_commun"]->getValues("publisher") != "") {
         <script type="text/javascript">
 
             <?php echo $this->mainPage["element_commun"]->getValues("code_google_analytics"); ?>
-                
+
         </script>
     </body>
 </html>
