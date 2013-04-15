@@ -1,9 +1,9 @@
 <?php
 
 
-namespace Slrfw\App\Front\Controller;
+namespace App\Front\Controller;
 
-use Slrfw\Library\Registry;
+use Slrfw\Registry;
 
 /**
  * Class example of MainController with always call
@@ -13,13 +13,19 @@ use Slrfw\Library\Registry;
  * @author   Monnot Stéphane (Shin) <monnot.stephane@gmail.com>
  * @license  Licence Shin
  */
-class Main extends \Slrfw\Library\Controller {
+class Main extends \Slrfw\Controller {
 
     /**
      *
      * @var \Slrfw\Model\utilisateur
      */
     protected $_utilisateurAdmin;
+
+    /**
+     *
+     * @var \Slrfw\Model\gabaritManagerOptimized
+     */
+    public  $_gabaritManager;
 
     /**
      * Always execute before other method in controller
@@ -29,8 +35,9 @@ class Main extends \Slrfw\Library\Controller {
     public function start() {
         parent::start();
 
+
         /** Set title of page ! */
-        $this->_seo->setTitle($this->_project->getName());
+        $this->_seo->setTitle($this->_mainConfig->get("project", "name"));
 
         /** Noindex Nofollow pour tout */
 //        $this->_seo->disableIndex();
@@ -50,43 +57,31 @@ class Main extends \Slrfw\Library\Controller {
          *  = possibilité de voir le site sans tenir compte de la visibilité
          *
          */
-        $this->_utilisateurAdmin = new \Slrfw\Library\Session('back');
+        $this->_utilisateurAdmin = new \Slrfw\Session('back');
         $this->_view->utilisateurAdmin = $this->_utilisateurAdmin;
 
-        if ($this->_utilisateurAdmin->isConnected() && $this->_ajax == FALSE) {
-            if (isset($_GET["mode_previsualisation"])) {
-                $_SESSION["mode_previsualisation"] = (bool) $_GET["mode_previsualisation"];
-            }
+        $this->_view->modePrevisuPage = false;
 
-            if (!isset($_SESSION["mode_previsualisation"])) {
-                $_SESSION["mode_previsualisation"] = 0;
-            }
+        if ($this->_utilisateurAdmin->isConnected()
+            && $this->_ajax == FALSE
+        ) {
+            if (!isset($_POST['id_gabarit'])) {
+                if (isset($_GET["mode_previsualisation"])) {
+                    $_SESSION["mode_previsualisation"] = (bool) $_GET["mode_previsualisation"];
+                }
 
-            $this->_gabaritManager->setModePrevisualisation($_SESSION["mode_previsualisation"]);
+                if (!isset($_SESSION["mode_previsualisation"])) {
+                    $_SESSION["mode_previsualisation"] = 0;
+                }
 
-            //Inclusion Bootstrap twitter
-            $this->_javascript->addLibrary('back/js/bootstrap/bootstrap.min.js', false);
-            $this->_css->addLibrary('back/css/bootstrap/bootstrap.min.css', 'screen', false);
+                $this->_gabaritManager->setModePrevisualisation($_SESSION["mode_previsualisation"]);
 
-            $this->_view->site = Registry::get('project-name');
-            $this->_view->modePrevisualisation = $_SESSION["mode_previsualisation"];
-
-        }
-
-
-        /** EXEMPLE DE RECUPERATION DES RUBRIQUE parent et leurs enfants */
-        $this->_rubriques = $this->_gabaritManager->getList(ID_VERSION, ID_API, 0, array(3, 4, 5), TRUE);
-        foreach ($this->_rubriques as $ii => $rubrique) {
-            $pages = $this->_gabaritManager->getList(ID_VERSION, ID_API, $rubrique->getMeta('id'), FALSE, 1);
-            $rubrique->setChildren($pages);
-
-            foreach ($pages as $page) {
-                $firstChild = $this->_gabaritManager->getFirstChild(ID_VERSION, $page->getMeta('id'));
-                if ($firstChild)
-                    $page->setFirstChild($firstChild);
+                $this->_view->site = Registry::get('project-name');
+                $this->_view->modePrevisualisation = $_SESSION["mode_previsualisation"];
+            } else {
+                $this->_view->modePrevisuPage = true;
             }
         }
-        $this->_view->rubriques = $this->_rubriques;
 
         //Recupération des gabarits main
         $this->_view->mainPage = $this->_gabaritManager->getMain(ID_VERSION, ID_API);
@@ -100,6 +95,14 @@ class Main extends \Slrfw\Library\Controller {
             "url" => "./",
         );
 
+    }
+
+
+    public function shutdown()
+    {
+        parent::shutdown();
+        /** Chargement des executions automatiques **/
+        $this->loadExec('shutdown');
     }
 
 }

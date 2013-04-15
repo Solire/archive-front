@@ -1,20 +1,20 @@
 <?php
 
-namespace Slrfw\App\Front\Controller;
+namespace App\Front\Controller;
 
-use Slrfw\Library\Registry;
+use Slrfw\Registry;
 
 
 class Page extends Main
 {
 
-    private $_cache = null;
+    protected $_cache = null;
 
     /**
      *
-     * @var page
+     * @var \Slrfw\Model\gabaritPage
      */
-    private $_page = null;
+    protected $_page = null;
 
     /**
      * Accepte les rewritings
@@ -62,6 +62,17 @@ class Page extends Main
         $this->_seo->setDescription($this->_page->getMeta("bal_descr"));
         $this->_seo->addKeyword($this->_page->getMeta("bal_key"));
         $this->_seo->setUrlCanonical($this->_page->getMeta("canonical"));
+        if ($this->_page->getMeta("author") > 0) {
+            $authors = $this->_view->mainPage["element_commun"]->getBlocs("author_google")->getValues();
+            foreach ($authors as $author) {
+                if($author["id"] == $this->_page->getMeta("author")) {
+                    $this->_seo->setAuthor($author["compte_google"]);
+                    $this->_seo->setAuthorName($author["nom_de_lauteur"]);
+                    break;
+                }
+            }
+        }
+
         if ($this->_page->getMeta("no_index"))
             $this->_seo->disableIndex();
 
@@ -79,14 +90,14 @@ class Page extends Main
     }
 
 
-    private function _previsu()
+    protected function _previsu()
     {
         $first = TRUE;
         $this->_pages = array();
 
         $this->_page = $this->_gabaritManager->previsu($_POST);
 
-        if (count($this->_pages) == 0) {
+        if (count($this->_pages) == 0 && $this->_page->getMeta("id") > 0) {
             $this->_pages = $this->_gabaritManager->getList(
                 $_POST['id_version'], $_POST['id_api'],
                 $this->_page->getMeta("id"), false, true, "ordre", "asc"
@@ -112,7 +123,7 @@ class Page extends Main
         }
     }
 
-    private function _display()
+    protected function _display()
     {
         if (empty($this->rew)) {
             $this->rew[] = 'accueil';
@@ -163,9 +174,9 @@ class Page extends Main
             ID_VERSION, ID_API, $this->_page->getMeta("id"), false, true, "ordre", "asc"
         );
 
-        if ($this->_page->getGabarit()->getName() == "produits_page"
-            || $this->_page->getGabarit()->getName() == "produits_sous_sous_rub"
-        ) {
+
+        $categoryIds = explode(',', $this->_appConfig->get('category', 'allDisplayIds'));
+        if (in_array($this->_page->getGabarit()->getId(), $categoryIds)) {
             foreach ($this->_pages as $ii => $page) {
                 $this->_pages[$ii] = $this->_gabaritManager->getPage(
                     ID_VERSION, ID_API, $page->getMeta("id"), 0, true, true

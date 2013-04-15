@@ -1,0 +1,23 @@
+<div class="modal-body" id="mercury_media_modal">
+
+    <form id="mercury_media" class="form-horizontal" style="width: 600px;">  
+                    <div class="select input optional control-group" id="media_image_alignment_input"> 
+                        <label style="margin-right: 6px;" for="media_image_list" class="control-label">Liste d'images</label>              
+                        <select name="" class="media_image_list" id="media_image_list"></select> 
+                    </div>  
+                    <div class="select input optional control-group" id="media_image_alignment_input"> 
+                        <label style="margin-right: 6px;" for="media_image_list" class="control-label">&nbsp;</label>              
+                        <div id="pickfiles" class="btn btn-primary">Ajouter un visuel</div>
+                    </div>  
+
+                    <div id="media_image_url_input" class="string input optional stringish  control-group">            
+                        <label style="margin-right: 6px;" class="control-label" for="media_image_url"><input name="media_type" type="hidden" value="image_url" checked="checked"/>URL</label>            
+                        <input class="selectable" id="media_image_url" name="media[image_url]" type="text"/> 
+                        <div  title="Prévisualisation"  class="btn btn-primary"><a target="_blank" href="" class="previsu"><img alt="Prévisualisation" src="app/back/img/voir.png"></a></div>   
+                        <div  title="Recadrer"  class="btn btn-primary"><span href="#" class="crop"><img alt="Recadrer" src="app/back/img/crop.png"></span></div>       
+                    </div>     
+    </form>
+</div>
+<div class="modal-footer">    
+    <input class="submit btn btn-primary" name="commit" onclick="$('#mercury_media').submit()" type="submit" value="Insérer le visuel"/>
+</div>

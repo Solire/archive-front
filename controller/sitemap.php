@@ -1,8 +1,8 @@
 <?php
 
-namespace Slrfw\App\Front\Controller;
+namespace App\Front\Controller;
 
-use Slrfw\Library\Registry;
+use Slrfw\Registry;
 
 class Sitemap extends Main {
 
@@ -43,8 +43,8 @@ class Sitemap extends Main {
             "lastmod" => substr($accueil->getMeta("date_modif"), 0, 10)
         );
 
-        $this->_rubriques = $this->_gabaritManager->getList(ID_VERSION, ID_API, 0, array(6, 7, 8, 9, 10), $visible);
-
+        $categoryIds = explode(',', $this->_appConfig->get('category', 'ids'));
+        $this->_rubriques = $this->_gabaritManager->getList(ID_VERSION, ID_API, 0, $categoryIds, $visible);
 
         foreach ($this->_rubriques as $ii => $rubrique) {
             $this->_pages[] = array(
@@ -133,4 +133,3 @@ class Sitemap extends Main {
 
 }
 
-?>

@@ -4,20 +4,27 @@
 <!--[if IE 8]>         <html lang="<?php echo strtolower(SUF_VERSION); ?>" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="<?php echo strtolower(SUF_VERSION); ?>" class="no-js"> <!--<![endif]-->
     <head>
+        <meta charset="UTF-8" />
         <title><?php echo $this->seo->getTitle(); ?></title>
         <meta name="description" content="<?php echo $this->seo->getDescription(); ?>" />
         <meta name="keywords" lang="<?php echo strtolower(SUF_VERSION); ?>" content="<?php echo $this->seo->showKeywords(); ?>" />
 
 
-        <meta charset="UTF-8" />
         <meta name="language" content="<?php echo strtolower(SUF_VERSION); ?>" />
         <meta name="robots" content="<?php echo $this->seo->getIndex(); ?>index, <?php echo $this->seo->getFollow(); ?>follow, all" />
         <meta name="googlebot" content="<?php echo $this->seo->getIndex(); ?>index, <?php echo $this->seo->getFollow(); ?>follow, all" />
 
-        <meta name="msvalidate.01" content="" />
-        <meta name="y_key" content="" />
-        <meta name="google-site-verification" content="" />
-        <meta name="author" content="Solire" />
+        <meta name="google-site-verification" content="<?php echo $this->mainPage["element_commun"]->getValues("code_google_webmaster_tools"); ?>" />
+        <meta name="msvalidate.01" content="<?php echo $this->mainPage["element_commun"]->getValues("code_bing_webmaster_tools"); ?>" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Solire" />
+<?php
+if($this->seo->getAuthor() != "") {
+?>
+        <link rel="author" href="https://plus.google.com/<?php echo $this->seo->getAuthor(); ?>" title="<?php echo $this->seo->getAuthorName(); ?>" type="text/html">
+<?php
+}
+?>
         <base href="<?php echo $this->url; ?>" />
 
 <?php
@@ -30,31 +37,31 @@ if ($this->seo->getUrlCanonical() != "") {
 
 
 
-<?php echo $this->cssComponents; ?>
+<?php echo $this->css; ?>
 
 
-        <script src="js/jquery/jquery-1.7.min.js"></script>
+        <script type="text/javascript">window.jQuery || document.write('<script type="text/javascript" src="app/front/js/jquery/jquery-1.7.min.js"><\/script>')</script>
         <!--[if IE]>
             <script src="js/html5.js"></script>
         <![endif]-->
-<?php echo $this->jsComponents; ?>
+<?php echo $this->javascript; ?>
 
 
 
     </head>
-    <body role="document">
-        <?php 
-        if ($this->utilisateurAdmin->isConnected()) {
-            $this->add("toolbar.phtml");
+    <body role="document"  itemscope itemtype="http://schema.org/WebPage">
+<?php
+        if ($this->utilisateurAdmin->isConnected() && !$this->_view->modePrevisuPage) {
+            $this->add("middleoffice/toolbar.phtml");
         }
-        ?>
-        
+?>
+
 
         <header role="banner">
             <?php $this->add("menu.phtml"); ?>
         </header>
         <!-- End header -->
-        
+
         <div class="ariane" itemprop="breadcrumb"><?php $this->add("breadcrumbs.phtml"); ?></div>
 
 
@@ -62,26 +69,22 @@ if ($this->seo->getUrlCanonical() != "") {
 
 
         <footer>
+<?php
+if($this->mainPage["element_commun"]->getValues("publisher") != "") {
+?>
+        <a target="_blank" rel="publisher" href="https://plus.google.com/<?php echo $this->mainPage["element_commun"]->getValues("publisher"); ?>"><?php echo $this->mainPage["element_commun"]->getValues("publisher_nom"); ?></a>
+<?php
 
-
+}
+?>
         </footer>
         <!-- End footer -->
 
 
         <script type="text/javascript">
-            
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', '<?php echo $this->google_analytics; ?>']);
-            _gaq.push(['_setDomainName', 'none']);
-            _gaq.push(['_setAllowLinker', true]);
-            _gaq.push(['_trackPageview']);
- 
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-            
+
+            <?php echo $this->mainPage["element_commun"]->getValues("code_google_analytics"); ?>
+
         </script>
     </body>
 </html>
