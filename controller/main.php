@@ -57,7 +57,7 @@ class Main extends \Slrfw\Controller {
          *  = possibilité de voir le site sans tenir compte de la visibilité
          *
          */
-        $this->_utilisateurAdmin = new \Slrfw\Session('back');
+        $this->_utilisateurAdmin = new \Slrfw\Session('back', 'back');
         $this->_view->utilisateurAdmin = $this->_utilisateurAdmin;
 
         $this->_view->modePrevisuPage = false;
