@@ -38,7 +38,7 @@ class Middleoffice extends \Slrfw\Controller
     {
         parent::start();
         $this->_cache = Registry::get('cache');
-        $this->_utilisateurAdmin = new \Slrfw\Session('back');
+        $this->_utilisateurAdmin = new \Slrfw\Session('back', 'back');
         $this->_gabaritManager = new \Slrfw\Model\gabaritManagerOptimized();
     }
     
