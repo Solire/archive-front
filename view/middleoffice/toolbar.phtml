@@ -146,32 +146,8 @@ if (isset($this->page)) {
         }
 
         $(function() {
-            loadScript("app/back/js/smallipop/jquery.smallipop.js", function() {
-                $('[data-smallipop=true]').smallipop({
-                    preferredPosition: 'right',
-                    theme: 'black',
-                    popupOffset: 0,
-//                    triggerOnClick: true,
-                    hideOnPopupClick: false,
-                    onBeforeShow: function() {
-                        if ($("[data-mercury]").length == 0) {
-                            return false;
-                        }
-                    },
-                    onBeforeHide: function(trigger) {
-                        if ($(trigger).find("textarea").length > 0) {
-                            if ($(trigger).find("textarea")[0] === $("*:focus")[0]) {
-                                return false;
-                            }
-                        } else {
-                            if ($(trigger)[0] === $("*:focus")[0]) {
-                                return false;
-                            }
-                        }
-                    }
-                });
-            })
-            loadCss("app/back/css/smallipop/jquery.smallipop.css")
+
+
 
 
 
