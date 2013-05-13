@@ -44,6 +44,7 @@ class Page extends Main
         }
         else {
             $this->_display();
+            $this->_page->setConnected($this->_utilisateurAdmin->isConnected());
         }
 
         if (isset($this->_parents[1])) {
