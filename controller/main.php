@@ -91,7 +91,7 @@ class Main extends \Slrfw\Controller {
 
         $this->_view->breadCrumbs = array();
         $this->_view->breadCrumbs[] = array(
-            "label" => "Accueil",
+            "label" => $this->_('Accueil'),
             "url" => "./",
         );
 
