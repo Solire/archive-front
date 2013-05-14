@@ -55,27 +55,28 @@ class Page extends Main
         }
 
         $this->_siblings = $this->_gabaritManager->getList(
-            ID_VERSION, ID_API, $this->_page->getMeta("id_parent"), 0, true
+            ID_VERSION, ID_API, $this->_page->getMeta('id_parent'), 0, true
         );
 
         //Balise META
-        $this->_seo->setTitle($this->_page->getMeta("bal_title"));
-        $this->_seo->setDescription($this->_page->getMeta("bal_descr"));
-        $this->_seo->addKeyword($this->_page->getMeta("bal_key"));
-        $this->_seo->setUrlCanonical($this->_page->getMeta("canonical"));
-        if ($this->_page->getMeta("author") > 0) {
-            $authors = $this->_view->mainPage["element_commun"]->getBlocs("author_google")->getValues();
+        $this->_seo->setTitle($this->_page->getMeta('bal_title'));
+        $this->_seo->setDescription($this->_page->getMeta('bal_descr'));
+        $this->_seo->addKeyword($this->_page->getMeta('bal_key'));
+        $this->_seo->setUrlCanonical($this->_page->getMeta('canonical'));
+        if ($this->_page->getMeta('author') > 0) {
+            $authors = $this->_view->mainPage['element_commun']->getBlocs('author_google')->getValues();
             foreach ($authors as $author) {
-                if($author["id"] == $this->_page->getMeta("author")) {
-                    $this->_seo->setAuthor($author["compte_google"]);
-                    $this->_seo->setAuthorName($author["nom_de_lauteur"]);
+                if($author['id'] == $this->_page->getMeta('author')) {
+                    $this->_seo->setAuthor($author['compte_google']);
+                    $this->_seo->setAuthorName($author['nom_de_lauteur']);
                     break;
                 }
             }
         }
 
-        if ($this->_page->getMeta("no_index"))
+        if ($this->_page->getMeta('no_index')) {
             $this->_seo->disableIndex();
+        }
 
         $this->_view->page      = $this->_page;
         $this->_view->parents   = $this->_parents;
@@ -83,11 +84,11 @@ class Page extends Main
         $this->_view->siblings  = $this->_siblings;
 
         $view = $this->_page->getGabarit()->getName();
-        if (method_exists($this, "_" . $view . "Gabarit"))
-            $this->{"_" . $view . "Gabarit"}();
+        if (method_exists($this, '_' . $view . 'Gabarit'))
+            $this->{'_' . $view . 'Gabarit'}();
 
         $this->shutdown();
-        $this->_view->display("page", $view);
+        $this->_view->display('page', $view);
     }
 
 
@@ -98,10 +99,10 @@ class Page extends Main
 
         $this->_page = $this->_gabaritManager->previsu($_POST);
 
-        if (count($this->_pages) == 0 && $this->_page->getMeta("id") > 0) {
+        if (count($this->_pages) == 0 && $this->_page->getMeta('id') > 0) {
             $this->_pages = $this->_gabaritManager->getList(
                 $_POST['id_version'], $_POST['id_api'],
-                $this->_page->getMeta("id"), false, true, "ordre", "asc"
+                $this->_page->getMeta('id'), false, true, 'ordre', 'asc'
             );
         }
 
@@ -110,15 +111,15 @@ class Page extends Main
         $fullrewriting = "";
         foreach ($this->_parents as $ii => $parent) {
             $this->_parents[$ii] = $this->_gabaritManager->getPage(
-                $_POST['id_version'], $_POST['id_api'], $parent->getMeta("id"),
+                $_POST['id_version'], $_POST['id_api'], $parent->getMeta('id'),
                 0, false, false
             );
 
-            $this->_fullRewriting[] = $parent->getMeta("rewriting") . "/";
+            $this->_fullRewriting[] = $parent->getMeta('rewriting') . '/';
 
             $this->_view->breadCrumbs[] = array(
-                "label" => $parent->getMeta("titre"),
-                "url"   => implode("/", $this->_fullRewriting) . "/",
+                'label' => $parent->getMeta('titre'),
+                'url'   => implode('/', $this->_fullRewriting) . '/',
             );
 
         }
@@ -158,8 +159,8 @@ class Page extends Main
             $this->_fullRewriting[]     = $rewriting;
 
             $this->_view->breadCrumbs[]  = array(
-                "label"    => $page->getMeta("titre"),
-                "url"      => implode("/", $this->_fullRewriting) . "/",
+                'label'    => $page->getMeta('titre'),
+                'url'      => implode('/', $this->_fullRewriting) . '/',
             );
 
             if ($last) {
@@ -172,21 +173,16 @@ class Page extends Main
         }
 
         $this->_pages = $this->_gabaritManager->getList(
-            ID_VERSION, ID_API, $this->_page->getMeta("id"), false, true, "ordre", "asc"
+            ID_VERSION, ID_API, $this->_page->getMeta('id'), false, true, 'ordre', 'asc'
         );
-
 
         $categoryIds = explode(',', $this->_appConfig->get('category', 'allDisplayIds'));
         if (in_array($this->_page->getGabarit()->getId(), $categoryIds)) {
             foreach ($this->_pages as $ii => $page) {
                 $this->_pages[$ii] = $this->_gabaritManager->getPage(
-                    ID_VERSION, ID_API, $page->getMeta("id"), 0, true, true
+                    ID_VERSION, ID_API, $page->getMeta('id'), 0, true, true
                 );
             }
         }
     }
-
-
-
 }
-
