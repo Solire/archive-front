@@ -120,7 +120,13 @@ class Sitemap extends Main {
                 }
             }
             $pages = $pagesClone;
-            echo json_encode($pages);
+            
+            $json = json_encode($pages);
+            if (isset($_GET['tinymce'])) {
+                echo 'var tinyMCELinkList = ' . $json . ';';
+            } else {
+                echo $json;
+            }
         }
     }
 
