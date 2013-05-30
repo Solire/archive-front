@@ -42,48 +42,75 @@ class Sitemap extends Main {
             "importance" => $accueil->getMeta("importance"),
             "lastmod" => substr($accueil->getMeta("date_modif"), 0, 10)
         );
-
-        $categoryIds = explode(',', $this->_appConfig->get('category', 'ids'));
+        
+        //Si ids = *, on recupere tous les gabarits de niveau 0
+        if($this->_appConfig->get('sitemap', 'ids') == "*") {
+            $categoryIds = $this->_db->query("  
+                SELECT *
+                FROM `gab_gabarit`
+                WHERE id <> 1 AND id <> 2
+                    AND id_parent = 0")->fetchAll(\PDO::FETCH_COLUMN);
+        } else {
+            $categoryIds = explode(',', $this->_appConfig->get('sitemap', 'ids'));
+        }
+        
+        //On recupere les gabarits 
+        $gabarits = $this->_db->query("  
+                SELECT `gab_gabarit`.id, `gab_gabarit`.*
+                FROM `gab_gabarit`
+                WHERE id <> 1 AND id <> 2")->fetchAll(\PDO::FETCH_UNIQUE | \PDO::FETCH_ASSOC);
+        
         $this->_rubriques = $this->_gabaritManager->getList(ID_VERSION, ID_API, 0, $categoryIds, $visible);
 
+        //GABARIT NIVEAU 0
         foreach ($this->_rubriques as $ii => $rubrique) {
-            $this->_pages[] = array(
-                "title" => $rubrique->getMeta("titre"),
-                "visible" => $rubrique->getMeta("visible"),
-                "path" => $rubrique->getMeta('rewriting') . '.html',
-                "importance" => $rubrique->getMeta('importance'),
-                "lastmod" => substr($rubrique->getMeta('date_modif'), 0, 10)
-            );
-
-
-
-
-            $pages = $this->_gabaritManager->getList(ID_VERSION, ID_API, $rubrique->getMeta('id'), FALSE, $visible);
-
-
-
-            $rubrique->setChildren($pages);
-            foreach ($pages as $page) {
+            if($gabarits[$rubrique->getMeta("id_gabarit")]["view"]
+                    && $rubrique->getMeta("no_index") == 0
+            ){
                 $this->_pages[] = array(
-                    "title" => $page->getMeta("titre"),
-                    "visible" => $page->getMeta("visible"),
-                    "path" => $rubrique->getMeta('rewriting') . '/' . $page->getMeta('rewriting') . '.html',
-                    "importance" => $page->getMeta('importance'),
-                    "lastmod" => substr($rubrique->getMeta("id_parent") == 8 ? $page->getMeta('date_crea') : $page->getMeta('date_modif'), 0, 10)
+                    "title" => $rubrique->getMeta("titre"),
+                    "visible" => $rubrique->getMeta("visible"),
+                    "path" => $rubrique->getMeta('rewriting') . $gabarits[$rubrique->getMeta("id_gabarit")]["extension"],
+                    "importance" => $rubrique->getMeta('importance'),
+                    "lastmod" => substr($rubrique->getMeta('date_modif'), 0, 10)
                 );
+            }
 
-                $pages = $this->_gabaritManager->getList(ID_VERSION, ID_API, $page->getMeta('id'), FALSE, $visible);
-
-
-                $rubrique->setChildren($pages);
-                foreach ($pages as $page) {
+            //Récupération des enfants
+            $pages = $this->_gabaritManager->getList(ID_VERSION, ID_API, $rubrique->getMeta('id'), FALSE, $visible);
+            $rubrique->setChildren($pages);
+            
+            //GABARIT NIVEAU 1
+            foreach ($pages as $page) {
+                if($gabarits[$page->getMeta("id_gabarit")]["view"]
+                        && $page->getMeta("no_index") == 0
+                ){
                     $this->_pages[] = array(
                         "title" => $page->getMeta("titre"),
                         "visible" => $page->getMeta("visible"),
-                        "path" => $rubrique->getMeta('rewriting') . '/' . $page->getMeta('rewriting') . '.html',
+                        "path" => $rubrique->getMeta('rewriting') . '/' . $page->getMeta('rewriting') . $gabarits[$page->getMeta("id_gabarit")]["extension"],
                         "importance" => $page->getMeta('importance'),
-                        "lastmod" => substr($rubrique->getMeta("id_parent") == 8 ? $page->getMeta('date_crea') : $page->getMeta('date_modif'), 0, 10)
+                        "lastmod" => substr($page->getMeta('date_modif'), 0, 10)
                     );
+                }
+                
+                //Récupération des enfants
+                $sspages = $this->_gabaritManager->getList(ID_VERSION, ID_API, $page->getMeta('id'), FALSE, $visible);
+                $page->setChildren($sspages);
+                
+                //GABARIT NIVEAU 2
+                foreach ($sspages as $sspage) {
+                    if($gabarits[$sspage->getMeta("id_gabarit")]["view"]
+                            && $sspage->getMeta("no_index") == 0
+                    ){
+                        $this->_pages[] = array(
+                            "title" => $sspage->getMeta("titre"),
+                            "visible" => $sspage->getMeta("visible"),
+                            "path" => $rubrique->getMeta('rewriting') . '/' . $page->getMeta('rewriting') . '/' . $sspage->getMeta('rewriting') . $gabarits[$sspage->getMeta("id_gabarit")]["extension"],
+                            "importance" => $sspage->getMeta('importance'),
+                            "lastmod" => substr($sspage->getMeta('date_modif'), 0, 10)
+                        );
+                    }
                 }
             }
         }
