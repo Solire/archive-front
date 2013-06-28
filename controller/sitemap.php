@@ -42,14 +42,14 @@ class Sitemap extends Main {
             "importance" => $accueil->getMeta("importance"),
             "lastmod" => substr($accueil->getMeta("date_modif"), 0, 10)
         );
-        
+
         //Si ids = *, on recupere tous les gabarits de niveau 0
         if($this->_appConfig->get('sitemap', 'ids') == "*") {
             $categoryIds = $this->_db->query("  
                 SELECT *
                 FROM `gab_gabarit`
                 WHERE id <> 1 AND id <> 2
-                    AND id_parent = 0")->fetchAll(\PDO::FETCH_COLUMN);
+                    AND (id_parent = 0 OR id_parent = id)")->fetchAll(\PDO::FETCH_COLUMN);
         } else {
             $categoryIds = explode(',', $this->_appConfig->get('sitemap', 'ids'));
         }
@@ -59,6 +59,10 @@ class Sitemap extends Main {
                 SELECT `gab_gabarit`.id, `gab_gabarit`.*
                 FROM `gab_gabarit`
                 WHERE id <> 1 AND id <> 2")->fetchAll(\PDO::FETCH_UNIQUE | \PDO::FETCH_ASSOC);
+        
+        if(count($categoryIds) == 0) {
+            exit();
+        }
         
         $this->_rubriques = $this->_gabaritManager->getList(ID_VERSION, ID_API, 0, $categoryIds, $visible);
 

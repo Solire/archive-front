@@ -188,7 +188,9 @@ if (isset($this->page)) {
 
                 if ($(element).hasClass("mercury-editable-toolbar")) {
 
-                    $(".mercury-save-button, .mercury-preview-button").addClass('btn btn-success')
+                    $(".mercury-save-button, .mercury-preview-button").addClass('btn btn-success btn-small').removeClass("mercury-button")
+                    $(".mercury-save-button").html('<i class="icon-ok"></i> Valider')
+                    $(".mercury-preview-button").html('<i class="icon-edit"></i> Masquer les zones éditables').css({"margin-right" : "10px"})
                 }
 
                 if ($(element).attr("id") == "mercury_iframe") {
@@ -200,7 +202,8 @@ if (isset($this->page)) {
                         loadScript("app/back/js/bootstrap/bootstrap.min.js?admin")
                         loadScript("app/back/js/jquery/jcrop/jquery.Jcrop.min.js")
                         loadScript("app/back/js/jquery/ui.spinner.min.js")
-
+                        loadScript("app/back/js/main.js?admin")
+                        loadScript("app/back/js/jquery/sticky.js?admin")
 
                         loadCss("app/back/css/jcrop/jquery.Jcrop.min.css")
                         loadCss("app/back/css/jquery-ui-1.8.7.custom.css")
@@ -208,6 +211,7 @@ if (isset($this->page)) {
                         loadCss("app/back/css/bootstrap/bootstrap.min.css")
                         loadCss("app/back/css/ui.spinner.css")
                         loadCss("app/back/css/crop.css")
+                        loadCss("app/back/css/sticky.css")
 
                         $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html?id_gab_page=" + <?php echo $this->page->getMeta("id") ?>, function() {
                             cloneModalCrop.appendTo("body")
@@ -300,7 +304,7 @@ if (isset($this->page)) {
     <script type="text/javascript">
         $(function() {
             loadScript("app/back/js/bootstrap/bootstrap.min.js?admin")
-
+            loadScript("app/back/js/main.js?admin")
 
             loadCss("app/back/css/bootstrap/bootstrap-responsive.min.css")
             loadCss("app/back/css/bootstrap/bootstrap.min.css")
