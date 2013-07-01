@@ -20,9 +20,10 @@
                     ?>
                 
                     <?php 
-                    if ($this->page->getGabarit()->getMake_hidden()
+                    if (($this->page->getGabarit()->getMake_hidden()
                         || $this->utilisateurAdmin->get("niveau") == "solire"
-                        || !$this->page->getMeta("visible")
+                        || !$this->page->getMeta("visible"))
+                        && $this->modePrevisualisation
                     ) {
                     ?>
                     <li>
@@ -30,7 +31,7 @@
                             <button class="btn btn-default btn-small">
                                 <img src="app/back/img/flags/png/<?php echo strtolower(SUF_VERSION); ?>.png" alt="" />
                             </button>
-                            <button class="btn btn-small btn-info visible-lang"  title="Rendre '<?php echo $this->page->getMeta('titre'); ?>' visible sur le site ">
+                            <button class="btn btn-small btn-info visible-lang"  title="Rendre '<?php echo $this->page->getMeta('titre'); ?>' <?php echo ($this->page->getMeta("visible") > 0 ? 'invisible' : 'visible' ) ?> sur le site">
                                 <input type="checkbox" value="<?php echo $this->page->getMeta("id"); ?>|<?php echo $this->page->getMeta("id_version"); ?>" style="display:none;" class="visible-lang-<?php echo $this->page->getMeta("id"); ?>-<?php echo $this->page->getMeta("id_version"); ?>" <?php echo ($this->page->getMeta("visible") > 0 ? ' checked="checked"' : '') ?> />
                                 <i class="<?php echo ($this->page->getMeta("visible") > 0 ? 'icon-eye-open' : 'icon-eye-close translucide') ?>"></i>
                             </button>
