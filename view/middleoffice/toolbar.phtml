@@ -275,7 +275,7 @@ if (isset($this->page)) {
                                     var lightview = Mercury.lightview(null, {title: 'Enregistrement en cours, veuillez patientez ...', closeButton: true});
                                     setTimeout(function() {
                                         $.post('<?php echo $this->url; ?>back/page/save.html?edit-front=1', {content: top.JSON.stringify(data, null)}, function() {
-                                            lightview.loadContent('<div style="width:500px">La page a été enregistrée avec succès</div>');
+                                            lightview.loadContent('<div style="width:500px">La page a été enregistrée avec succès</div>', {title: 'Succès de l\'enregistrement de la page', closeButton: true});
                                             javascript:toggleMercury()
                                         });
                                     }, 500);
