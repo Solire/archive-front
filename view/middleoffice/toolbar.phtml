@@ -215,7 +215,7 @@ if (isset($this->page)) {
 
                         $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html?id_gab_page=" + <?php echo $this->page->getMeta("id") ?>, function() {
                             cloneModalCrop.appendTo("body")
-
+                            loadScript("app/back/js/bootstrap/bootstrap.min.js?admin")
                             loadScript("app/back/js/crop_front.js")
                         })
                         //                  $("<iframe>", {
