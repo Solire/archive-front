@@ -218,7 +218,7 @@ if (isset($this->page)) {
                             loadScript("app/back/js/bootstrap/bootstrap.min.js?admin");
                             loadScript("app/back/js/crop_front.js");
                             $(".mode_normal").click(function(e) {
-                                if(!$(".visible-lang input").is(":checked")) {
+                                if($(".visible-lang input").length != 0 && !$(".visible-lang input").is(":checked")) {
                                     e.preventDefault()
                                     var heading = 'Passer en mode normal (pages visibles)';
                                     var question = 'Attention, cette page n\'est pas visible, vous allez être redirigé vers la page d\'accueil, malgré cela êtes-vous sûr de vouloir continuer ? ';
