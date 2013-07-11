@@ -213,10 +213,25 @@ if (isset($this->page)) {
                         loadCss("app/back/css/crop.css")
                         loadCss("app/back/css/sticky.css")
 
-                        $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html?id_gab_page=" + <?php echo $this->page->getMeta("id") ?>, function() {
+                        $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html", {currentUrl : "<?php echo $this->currentUrl; ?>", id_gab_page : <?php echo $this->page->getMeta("id") ?>}, function() {
                             cloneModalCrop.appendTo("body")
-                            loadScript("app/back/js/bootstrap/bootstrap.min.js?admin")
-                            loadScript("app/back/js/crop_front.js")
+                            loadScript("app/back/js/bootstrap/bootstrap.min.js?admin");
+                            loadScript("app/back/js/crop_front.js");
+                            $(".mode_normal").click(function(e) {
+                                if(!$(".visible-lang input").is(":checked")) {
+                                    e.preventDefault()
+                                    var heading = 'Passer en mode normal (pages visibles)';
+                                    var question = 'Attention, cette page n\'est pas visible, vous allez être redirigé vers la page d\'accueil, malgré cela êtes-vous sûr de vouloir continuer ? ';
+                                    var cancelButtonTxt = 'Annuler';
+                                    var okButtonTxt = 'Continuer';
+                                    var href = $(this).attr("href");
+                                    var callback = function() {
+                                        document.location.href = $("base").attr("href");
+                                    }
+
+                                    myModal.confirm(heading, question, cancelButtonTxt, okButtonTxt, callback, 12010);
+                                }
+                            })
                         })
                         //                  $("<iframe>", {
                         //                seamless: 'true',
@@ -309,7 +324,7 @@ if (isset($this->page)) {
             loadCss("app/back/css/bootstrap/bootstrap-responsive.min.css")
             loadCss("app/back/css/bootstrap/bootstrap.min.css")
             $("body").prepend('<div id="back-toolbar-container"></div>')
-            $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html", function() {
+            $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html", {currentUrl : <?php echo $this->currentUrl; ?>}, function() {
 
             })
         });

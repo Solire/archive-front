@@ -43,7 +43,8 @@ class Main extends \Slrfw\Controller {
 //        $this->_seo->disableIndex();
 //        $this->_seo->disableFollow();
 
-
+        $this->_view->currentUrl = $this->getCurrentUrl();
+        
         $this->_view->google_analytics = Registry::get('analytics');
 
         $this->_view->fil_ariane = null;
@@ -104,5 +105,10 @@ class Main extends \Slrfw\Controller {
         /** Chargement des executions automatiques **/
         $this->loadExec('shutdown');
     }
+    
+    function getCurrentUrl(){  
+        $currenturl="http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];  
+        return $currenturl;  
+    } 
 
 }

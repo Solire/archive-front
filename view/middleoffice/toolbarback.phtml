@@ -4,14 +4,14 @@
         <div class="container-fluid">
             <a href="" class="brand">Navigation en mode </a>
             <ul class="nav">
-            <li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#"><?php echo $this->modePrevisualisation ? 'Prévisualisation (pages visibles et invisibles)' : 'Normal (pages visibles)' ?>  <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="?mode_previsualisation=0">Normal (pages visibles)</a></li>
-                        <li><a href="?mode_previsualisation=1">Prévisualisation (pages visibles et invisibles)</a></li>
-                    </ul>
+                <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#"><?php echo $this->modePrevisualisation ? 'Prévisualisation (pages visibles et invisibles)' : 'Normal (pages visibles)' ?>  <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="mode_normal" href="<?php echo $this->currentUrl; ?>?mode_previsualisation=0">Normal (pages visibles)</a></li>
+                            <li><a href="<?php echo $this->currentUrl; ?>?mode_previsualisation=1">Prévisualisation (pages visibles et invisibles)</a></li>
+                        </ul>
                 </li>
-                </ul>
+            </ul>
 
             <ul class="nav pull-right">
 
