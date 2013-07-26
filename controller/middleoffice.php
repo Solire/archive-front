@@ -38,7 +38,7 @@ class Middleoffice extends \Slrfw\Controller
     {
         parent::start();
         $this->_cache = Registry::get('cache');
-        $this->_utilisateurAdmin = new \Slrfw\Session('back');
+        $this->_utilisateurAdmin = new \Slrfw\Session('back', 'back');
         $this->_gabaritManager = new \Slrfw\Model\gabaritManagerOptimized();
     }
     
@@ -56,12 +56,15 @@ class Middleoffice extends \Slrfw\Controller
         }
         $this->_view->main(false);
         $this->_javascript->addLibrary('back/js/bootstrap/bootstrap.min.js');
+        $this->_javascript->addLibrary('back/js/main.js');
         $this->_css->addLibrary('back/css/bootstrap/bootstrap.min.css', 'screen', false);
-        if (isset($_GET["id_gab_page"]) && intval($_GET["id_gab_page"]) > 0) {
-            $this->_page = $this->_gabaritManager->getPage(ID_VERSION, ID_API, intval($_GET["id_gab_page"]));
+        if (isset($_POST["id_gab_page"]) && intval($_POST["id_gab_page"]) > 0) {
+            $this->_page = $this->_gabaritManager->getPage(ID_VERSION, ID_API, intval($_POST["id_gab_page"]));
             $this->_view->page = $this->_page;
         }
         
+        $this->_view->currentUrl = $_POST["currentUrl"];
+
         
     }
     

@@ -2,45 +2,72 @@
 <div class="navbar navbar-fixed-top back-toolbar">
     <div class="navbar-inner">
         <div class="container-fluid">
-            <a href="" class="brand">Outils de l'administrateur</a>
-
-
-
+            <a href="" class="brand">Navigation en mode </a>
+            <ul class="nav">
+                <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#"><?php echo $this->modePrevisualisation ? 'Prévisualisation (pages visibles et invisibles)' : 'Normal (pages visibles)' ?>  <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="mode_normal" href="<?php echo $this->currentUrl; ?>?mode_previsualisation=0">Normal (pages visibles)</a></li>
+                            <li><a href="<?php echo $this->currentUrl; ?>?mode_previsualisation=1">Prévisualisation (pages visibles et invisibles)</a></li>
+                        </ul>
+                </li>
+            </ul>
 
             <ul class="nav pull-right">
 
                 <?php
                 if (isset($this->page) && is_object($this->page)) {
                     ?>
-                    <li><a class="" href="javascript:toggleMercury()" target="_parent">Éditer</a></li>
+                
+                    <?php 
+                    if (($this->page->getGabarit()->getMake_hidden()
+                        || $this->utilisateurAdmin->get("niveau") == "solire"
+                        || !$this->page->getMeta("visible"))
+                        && $this->modePrevisualisation
+                    ) {
+                    ?>
                     <li>
-                        <?php
-                        if ($this->page->getMeta("visible") == 1) {
-                            ?>
-                            <a><span class="label label-success">Visible</span></a>
-                            <?php
-                        } else {
-                            ?>
-                            <a><span class="label label-warning">Non visible</span></a>
-                            <?php
-                        }
-                        ?>
+                        <div style="float: left;" class="btn-group">
+                            <button class="btn btn-default btn-small">
+                                <img src="app/back/img/flags/png/<?php echo strtolower(SUF_VERSION); ?>.png" alt="" />
+                            </button>
+                            <button class="btn btn-small btn-info visible-lang"  title="Rendre '<?php echo $this->page->getMeta('titre'); ?>' <?php echo ($this->page->getMeta("visible") > 0 ? 'invisible' : 'visible' ) ?> sur le site">
+                                <input type="checkbox" value="<?php echo $this->page->getMeta("id"); ?>|<?php echo $this->page->getMeta("id_version"); ?>" style="display:none;" class="visible-lang-<?php echo $this->page->getMeta("id"); ?>-<?php echo $this->page->getMeta("id_version"); ?>" <?php echo ($this->page->getMeta("visible") > 0 ? ' checked="checked"' : '') ?> />
+                                <i class="<?php echo ($this->page->getMeta("visible") > 0 ? 'icon-eye-open' : 'icon-eye-close translucide') ?>"></i>
+                            </button>
+                        </div>
                     </li>
+                    <?php } ?>
+                    <?php
+                    if ($this->utilisateurAdmin->get("niveau") == "solire"
+                        || $this->page->getGabarit()->getEditable()
+                    ) {
+                    ?>
+                    <li class="divider-vertical"></li>
+                    <li><button class="btn btn-success btn-small" onclick="javascript:toggleMercury()" target="_parent"><i class="icon-pencil"></i> Éditer</button></li>
+                    <?php } ?>
+                    
+                    
                     <?php
                 }
                 ?>
+                
                 <li class="divider-vertical"></li>
                 <li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Mode <?php echo $this->modePrevisualisation ? 'Prévisualisation' : 'Normal' ?>  <b class="caret"></b></a>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#"><img src="app/back/img/gray_dark/user_12x16.png">  <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="?mode_previsualisation=0">Normal</a></li>
-                        <li><a href="?mode_previsualisation=1">Prévisualisation</a></li>
-                    </ul>
-                </li>
-                <li class="divider-vertical"></li>
-                <li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#"><?php echo $this->utilisateurAdmin->get("nom"); ?> <?php echo $this->utilisateurAdmin->get("prenom"); ?> <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
+                        <?php
+                        if (isset($this->page) && is_object($this->page)) {
+                            ?>
+                            <?php
+                            if ($this->utilisateurAdmin->get("niveau") == "solire"
+                                || $this->page->getGabarit()->getEditable()
+                            ) {
+                            ?>
+                            <li><a href="back/page/display.html?id_gab_page=<?php echo $this->page->getMeta("id") ?>"><b>Gérer cette page dans le module d'admin</b></a></li>
+
+                            <?php } ?>
+                        <?php } ?>
                         <li><a href="back/sign/signout.html"><b>Déconnexion</b></a></li>
                     </ul>
                 </li>

@@ -25,8 +25,8 @@
 </script>
 
 <?php
-if (isset($this->page)) {
-    ?>
+    if (isset($this->page)) {
+?>
 
 
     <?php $this->add("../../back/view/template/cropdialog.phtml"); ?>
@@ -77,17 +77,13 @@ if (isset($this->page)) {
                         $.each(files, function(i, file) {
                             var tr, td;
                             if (!file.error) {
-
                             }
                             else
                                 uploader.splice(i, 1);
                         });
 
                         $.each(files, function(i, file) {
-
                         });
-
-
 
                         up.refresh();
                         up.start();
@@ -146,8 +142,32 @@ if (isset($this->page)) {
         }
 
         $(function() {
-
-
+            loadScript("app/back/js/smallipop/jquery.smallipop.js", function() {
+                $('[data-smallipop=true]').smallipop({
+                    preferredPosition: 'right',
+                    theme: 'black',
+                    popupOffset: 0,
+//                    triggerOnClick: true,
+                    hideOnPopupClick: false,
+                    onBeforeShow: function() {
+                        if ($("[data-mercury]").length == 0) {
+                            return false;
+                        }
+                    },
+                    onBeforeHide: function(trigger) {
+                        if ($(trigger).find("textarea").length > 0) {
+                            if ($(trigger).find("textarea")[0] === $("*:focus")[0]) {
+                                return false;
+                            }
+                        } else {
+                            if ($(trigger)[0] === $("*:focus")[0]) {
+                                return false;
+                            }
+                        }
+                    }
+                });
+            })
+            loadCss("app/back/css/smallipop/jquery.smallipop.css")
 
 
 
@@ -164,7 +184,9 @@ if (isset($this->page)) {
 
                 if ($(element).hasClass("mercury-editable-toolbar")) {
 
-                    $(".mercury-save-button, .mercury-preview-button").addClass('btn btn-success')
+                    $(".mercury-save-button, .mercury-preview-button").addClass('btn btn-success btn-small').removeClass("mercury-button")
+                    $(".mercury-save-button").html('<i class="icon-ok"></i> Valider')
+                    $(".mercury-preview-button").html('<i class="icon-edit"></i> Masquer les zones éditables').css({"margin-right" : "10px"})
                 }
 
                 if ($(element).attr("id") == "mercury_iframe") {
@@ -173,10 +195,10 @@ if (isset($this->page)) {
                         $("#mercury_iframe").after('<div id="back-toolbar-container"></div>')
 
                         loadScript("app/back/js/jquery/jquery-ui-1.8.23.custom.min.js")
-                        loadScript("app/back/js/bootstrap/bootstrap.min.js?admin")
                         loadScript("app/back/js/jquery/jcrop/jquery.Jcrop.min.js")
                         loadScript("app/back/js/jquery/ui.spinner.min.js")
-
+                        loadScript("app/back/js/main.js?admin")
+                        loadScript("app/back/js/jquery/sticky.js?admin")
 
                         loadCss("app/back/css/jcrop/jquery.Jcrop.min.css")
                         loadCss("app/back/css/jquery-ui-1.8.7.custom.css")
@@ -184,11 +206,28 @@ if (isset($this->page)) {
                         loadCss("app/back/css/bootstrap/bootstrap.min.css")
                         loadCss("app/back/css/ui.spinner.css")
                         loadCss("app/back/css/crop.css")
+                        loadCss("app/back/css/sticky.css")
 
-                        $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html?id_gab_page=" + <?php echo $this->page->getMeta("id") ?>, function() {
+                        $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html", {currentUrl : "<?php echo $this->currentUrl; ?>", id_gab_page : <?php echo $this->page->getMeta("id") ?>}, function() {
                             cloneModalCrop.appendTo("body")
+                            loadScript("app/back/js/bootstrap/bootstrap.min.js?admin", function(){
+                                loadScript("app/back/js/crop_front.js");
+                            });
+                            $(".mode_normal").click(function(e) {
+                                if($(".visible-lang input").length != 0 && !$(".visible-lang input").is(":checked")) {
+                                    e.preventDefault()
+                                    var heading = 'Passer en mode normal (pages visibles)';
+                                    var question = 'Attention, cette page n\'est pas visible, vous allez être redirigé vers la page d\'accueil, malgré cela êtes-vous sûr de vouloir continuer ? ';
+                                    var cancelButtonTxt = 'Annuler';
+                                    var okButtonTxt = 'Continuer';
+                                    var href = $(this).attr("href");
+                                    var callback = function() {
+                                        document.location.href = $("base").attr("href");
+                                    }
 
-                            loadScript("app/back/js/crop_front.js")
+                                    myModal.confirm(heading, question, cancelButtonTxt, okButtonTxt, callback, 12010);
+                                }
+                            })
                         })
                         //                  $("<iframe>", {
                         //                seamless: 'true',
@@ -247,7 +286,7 @@ if (isset($this->page)) {
                                     var lightview = Mercury.lightview(null, {title: 'Enregistrement en cours, veuillez patientez ...', closeButton: true});
                                     setTimeout(function() {
                                         $.post('<?php echo $this->url; ?>back/page/save.html?edit-front=1', {content: top.JSON.stringify(data, null)}, function() {
-                                            lightview.loadContent('<div style="width:500px">La page a été enregistrée avec succès</div>');
+                                            lightview.loadContent('<div style="width:500px">La page a été enregistrée avec succès</div>', {title: 'Succès de l\'enregistrement de la page', closeButton: true});
                                             javascript:toggleMercury()
                                         });
                                     }, 500);
@@ -270,22 +309,22 @@ if (isset($this->page)) {
 
 
 
-    <?php
-} else {
-    ?>
+<?php
+    } else {
+?>
     <script type="text/javascript">
         $(function() {
             loadScript("app/back/js/bootstrap/bootstrap.min.js?admin")
-
+            loadScript("app/back/js/main.js?admin")
 
             loadCss("app/back/css/bootstrap/bootstrap-responsive.min.css")
             loadCss("app/back/css/bootstrap/bootstrap.min.css")
             $("body").prepend('<div id="back-toolbar-container"></div>')
-            $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html", function() {
+            $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html", {currentUrl : "<?php echo $this->currentUrl; ?>"}, function() {
 
             })
         });
     </script>
-    <?php
-}
+<?php
+    }
 ?>

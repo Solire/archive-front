@@ -19,41 +19,41 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content="Solire" />
 <?php
-if($this->seo->getAuthor() != "") {
+    if ($this->seo->getAuthor() != "") {
 ?>
         <link rel="author" href="https://plus.google.com/<?php echo $this->seo->getAuthor(); ?>" title="<?php echo $this->seo->getAuthorName(); ?>" type="text/html">
 <?php
-}
+    }
 ?>
         <base href="<?php echo $this->url; ?>" />
 
 <?php
-if ($this->seo->getUrlCanonical() != "") {
+    if ($this->seo->getUrlCanonical() != "") {
 ?>
         <link rel="canonical" href="<?php echo $this->seo->getUrlCanonical(); ?>"/>
 <?php
-}
+    }
+
+    echo $this->css;
 ?>
-
-
-
-<?php echo $this->css; ?>
-
-
         <script type="text/javascript">window.jQuery || document.write('<script type="text/javascript" src="app/front/js/jquery/jquery-1.7.min.js"><\/script>')</script>
         <!--[if IE]>
             <script src="js/html5.js"></script>
         <![endif]-->
-<?php echo $this->javascript; ?>
-
-
-
+<?php
+    if ($this->utilisateurAdmin->isConnected() && !$this->modePrevisuPage && (isset($_GET['mercury_frame']) || !isset($this->page))
+        || !$this->utilisateurAdmin->isConnected()
+    ) {
+        echo $this->javascript;
+    }
+?>
     </head>
+
     <body role="document"  itemscope itemtype="http://schema.org/WebPage">
 <?php
-        if ($this->utilisateurAdmin->isConnected() && !$this->modePrevisuPage) {
-            $this->add("middleoffice/toolbar.phtml");
-        }
+    if ($this->utilisateurAdmin->isConnected() && !$this->modePrevisuPage && !isset($_GET['mercury_frame'])) {
+        $this->add("middleoffice/toolbar.phtml");
+    }
 ?>
 
 
@@ -70,12 +70,12 @@ if ($this->seo->getUrlCanonical() != "") {
 
         <footer>
 <?php
-if($this->mainPage["element_commun"]->getValues("publisher") != "") {
+    if($this->mainPage["element_commun"]->getValues("publisher") != "") {
 ?>
         <a target="_blank" rel="publisher" href="https://plus.google.com/<?php echo $this->mainPage["element_commun"]->getValues("publisher"); ?>"><?php echo $this->mainPage["element_commun"]->getValues("publisher_nom"); ?></a>
 <?php
 
-}
+    }
 ?>
         </footer>
         <!-- End footer -->
