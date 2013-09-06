@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Class example of MainController with always call
+ *
+ * @category Application
+ * @package  Controller
+ * @author   smonnot <smonnot@solire.fr>
+ * @license  Solire http://www.solire.fr/
+ */
 
 namespace App\Front\Controller;
 
@@ -10,8 +17,8 @@ use Slrfw\Registry;
  *
  * @category Application
  * @package  Controller
- * @author   Monnot Stéphane (Shin) <monnot.stephane@gmail.com>
- * @license  Licence Shin
+ * @author   smonnot <smonnot@solire.fr>
+ * @license  Solire http://www.solire.fr/
  */
 class Main extends \Slrfw\Controller {
 
@@ -28,23 +35,18 @@ class Main extends \Slrfw\Controller {
     public  $_gabaritManager;
 
     /**
-     * Always execute before other method in controller
+     * Fonction éxécutée avant l'execution de la fonction relative à la page en cours
      *
      * @return void
+     * @hook front/ shutdown Avant l'inclusion de la vue
      */
     public function start() {
         parent::start();
 
-
-        /** Set title of page ! */
         $this->_seo->setTitle($this->_mainConfig->get("project", "name"));
 
-        /** Noindex Nofollow pour tout */
-//        $this->_seo->disableIndex();
-//        $this->_seo->disableFollow();
-
         $this->_view->currentUrl = $this->getCurrentUrl();
-        
+
         $this->_view->google_analytics = Registry::get('analytics');
 
         $this->_view->fil_ariane = null;
@@ -52,11 +54,9 @@ class Main extends \Slrfw\Controller {
         $this->_gabaritManager = new \Slrfw\Model\gabaritManagerOptimized();
 
         /**
-         * MODE PREVISUALISATION
-         *
-         * On teste si utilisateur de l'admin loggué
-         *  = possibilité de voir le site sans tenir compte de la visibilité
-         *
+         * Mode prévisualisation,
+         * On teste si utilisateur de l'admin est connecté et donc si il a la
+         * possibilité de voir le site sans tenir compte de la visibilité
          */
         $this->_utilisateurAdmin = new \Slrfw\Session('back', 'back');
         $this->_view->utilisateurAdmin = $this->_utilisateurAdmin;
@@ -84,11 +84,19 @@ class Main extends \Slrfw\Controller {
             }
         }
 
-        //Recupération des gabarits main
+        /**
+         * Recupération des gabarits main
+         */
         $this->_view->mainPage = $this->_gabaritManager->getMain(ID_VERSION, ID_API);
 
-        //On recupere la page elements communs qui sera disponible sur toutes les pages
-        $this->_view->mainPage["element_commun"] = $this->_gabaritManager->getPage(ID_VERSION, ID_API, $this->_view->mainPage["element_commun"][0]->getMeta("id"), 0, FALSE, TRUE);
+        /**
+         * On recupere la page elements communs qui sera disponible sur toutes
+         * les pages
+         */
+        $this->_view->mainPage["element_commun"] = $this->_gabaritManager->getPage(
+            ID_VERSION, ID_API,
+            $this->_view->mainPage["element_commun"][0]->getMeta("id"), 0,
+            false, true);
 
         $this->_view->breadCrumbs = array();
         $this->_view->breadCrumbs[] = array(
@@ -96,19 +104,48 @@ class Main extends \Slrfw\Controller {
             "url" => "./",
         );
 
+        $hook = new \Slrfw\Hook();
+        $hook->setSubdirName('front');
+
+        $hook->javascript = $this->_javascript;
+        $hook->css        = $this->_css;
+
+        $hook->exec('start');
+
     }
 
-
+    /**
+     * Fonction éxécutée après l'execution de la fonction relative à la page en cours
+     *
+     * @return void
+     * @hook front/ shutdown Avant l'inclusion de la vue
+     */
     public function shutdown()
     {
         parent::shutdown();
-        /** Chargement des executions automatiques **/
-        $this->loadExec('shutdown');
-    }
-    
-    function getCurrentUrl(){  
-        $currenturl="http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];  
-        return $currenturl;  
-    } 
 
+        /**
+         * Chargement des executions automatiques
+         */
+        $this->loadExec('shutdown');
+
+        $hook = new \Slrfw\Hook();
+        $hook->setSubdirName('front');
+
+        $hook->javascript = $this->_javascript;
+        $hook->css        = $this->_css;
+
+        $hook->exec('shutdown');
+    }
+
+    /**
+     *
+     * @return type
+     */
+    public function getCurrentUrl()
+    {
+        $currenturl = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        return $currenturl;
+    }
 }
+
