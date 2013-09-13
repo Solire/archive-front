@@ -132,8 +132,7 @@ class Main extends \Slrfw\Controller {
         $hook = new \Slrfw\Hook();
         $hook->setSubdirName('front');
 
-        $hook->javascript = $this->_javascript;
-        $hook->css        = $this->_css;
+        $hook->controller = $this;
 
         $hook->exec('shutdown');
     }
