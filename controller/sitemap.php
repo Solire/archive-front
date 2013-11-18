@@ -4,16 +4,10 @@ namespace App\Front\Controller;
 
 use Slrfw\Registry;
 
-class Sitemap extends Main {
-
-    private $_cache = null;
-
-    public function start() {
-        parent::start();
-        $this->_cache = Registry::get('cache');
-    }
-
-    public function startAction() {
+class Sitemap extends Main
+{
+    public function startAction()
+    {
         global $pagesResult;
         $this->_view->main(false);
 
@@ -29,7 +23,6 @@ class Sitemap extends Main {
         }
 
         $this->_pages = array();
-
 
         $accueil = $this->_gabaritManager->getPage(ID_VERSION, ID_API, 1);
         $this->_pages[] = array(
@@ -163,7 +156,8 @@ class Sitemap extends Main {
         }
     }
 
-    function filter($page, $index, $searchString) {
+    function filter($page, $index, $searchString)
+    {
         global $pagesResult;
         if (stripos($page['title'], $searchString) !== false) {
             $pagesResult[] = $page;

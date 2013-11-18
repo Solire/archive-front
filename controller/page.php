@@ -7,14 +7,17 @@ use Slrfw\Registry;
 
 class Page extends Main
 {
-
-    protected $_cache = null;
-
     /**
      *
      * @var \Slrfw\Model\gabaritPage
      */
     protected $_page = null;
+
+    /**
+     *
+     * @var \Slrfw\Model\gabaritPage[]
+     */
+    protected $_parents = null;
 
     /**
      * Accepte les rewritings
@@ -31,7 +34,6 @@ class Page extends Main
     public function start()
     {
         parent::start();
-        $this->_cache = Registry::get('cache');
     }
 
     public function startAction()
@@ -53,11 +55,6 @@ class Page extends Main
             );
             $this->_parents[1]->setFirstChild($firstChild);
         }
-
-        $this->_siblings = $this->_gabaritManager->getList(
-            ID_VERSION, \Slrfw\FrontController::$idApiRew,
-            $this->_page->getMeta('id_parent'), 0, true
-        );
 
         //Balise META
         $this->_seo->setTitle($this->_page->getMeta('bal_title'));
@@ -81,12 +78,11 @@ class Page extends Main
 
         $this->_view->page      = $this->_page;
         $this->_view->parents   = $this->_parents;
-        $this->_view->pages     = $this->_pages;
-        $this->_view->siblings  = $this->_siblings;
 
         $view = $this->_page->getGabarit()->getName();
-        if (method_exists($this, '_' . $view . 'Gabarit'))
+        if (method_exists($this, '_' . $view . 'Gabarit')) {
             $this->{'_' . $view . 'Gabarit'}();
+        }
 
         $this->shutdown();
         $this->_view->display('page', $view);
@@ -95,21 +91,9 @@ class Page extends Main
 
     protected function _previsu()
     {
-        $first = TRUE;
-        $this->_pages = array();
-
         $this->_page = $this->_gabaritManager->previsu($_POST);
 
-        if (count($this->_pages) == 0 && $this->_page->getMeta('id') > 0) {
-            $this->_pages = $this->_gabaritManager->getList(
-                $_POST['id_version'], $_POST['id_api'],
-                $this->_page->getMeta('id'), false, true, 'ordre', 'asc'
-            );
-        }
-
-
         $this->_parents = array_reverse($this->_page->getParents());
-        $fullrewriting = "";
         foreach ($this->_parents as $ii => $parent) {
             $this->_parents[$ii] = $this->_gabaritManager->getPage(
                 $_POST['id_version'], $_POST['id_api'], $parent->getMeta('id'),
@@ -122,7 +106,6 @@ class Page extends Main
                 'label' => $parent->getMeta('titre'),
                 'url'   => implode('/', $this->_fullRewriting) . '/',
             );
-
         }
     }
 
@@ -171,19 +154,6 @@ class Page extends Main
             }
 
             $id_parent      = $id_gab_page;
-        }
-
-        $this->_pages = $this->_gabaritManager->getList(
-            ID_VERSION, \Slrfw\FrontController::$idApiRew, $this->_page->getMeta('id'), false, true, 'ordre', 'asc'
-        );
-
-        $categoryIds = explode(',', $this->_appConfig->get('category', 'allDisplayIds'));
-        if (in_array($this->_page->getGabarit()->getId(), $categoryIds)) {
-            foreach ($this->_pages as $ii => $page) {
-                $this->_pages[$ii] = $this->_gabaritManager->getPage(
-                    ID_VERSION, \Slrfw\FrontController::$idApiRew, $page->getMeta('id'), 0, true, true
-                );
-            }
         }
     }
 }

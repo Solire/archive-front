@@ -5,7 +5,6 @@ namespace App\Front\Controller;
 
 class Error extends Main
 {
-
     public function start()
     {
         parent::start();
