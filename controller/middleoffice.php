@@ -15,6 +15,12 @@ class Middleoffice extends \Slrfw\Controller
 
     /**
      *
+     * @var \Slrfw\Session
+     */
+    protected $_utilisateurAdmin;
+
+    /**
+     *
      * @var \Slrfw\Model\gabaritManagerOptimized
      */
     public $_gabaritManager;
@@ -56,6 +62,35 @@ class Middleoffice extends \Slrfw\Controller
         $this->_css->addLibrary('back/css/bootstrap/bootstrap.min.css', 'screen', false);
         if (isset($_POST["id_gab_page"]) && intval($_POST["id_gab_page"]) > 0) {
             $this->_page = $this->_gabaritManager->getPage(ID_VERSION, ID_API, intval($_POST["id_gab_page"]));
+
+            if ($this->_utilisateurAdmin->isConnected()) {
+                $this->_page->makeVisible = true;
+                $this->_page->makeHidden  = true;
+
+                $hook = new \Slrfw\Hook();
+                $hook->setSubdirName('back');
+
+                $hook->permission     = null;
+                $hook->utilisateur    = $this->_utilisateurAdmin;
+                $hook->visible        = $this->_page->getMeta('visible') == 0 ? 1 : 0;
+                $hook->ids            = $data['id'];
+                $hook->id_version     = ID_VERSION;
+
+                $hook->exec('pagevisible');
+
+                /**
+                 * On récupère la permission du hook,
+                 * on interdit uniquement si la variable a été modifié à false.
+                 */
+                if ($hook->permission === false) {
+                    if ($hook->visible == 1) {
+                        $this->_page->makeVisible = false;
+                    } else {
+                        $this->_page->makeHidden  = false;
+                    }
+                }
+            }
+
             $this->_view->page = $this->_page;
         }
 
