@@ -20,8 +20,8 @@ use Slrfw\Registry;
  * @author   smonnot <smonnot@solire.fr>
  * @license  Solire http://www.solire.fr/
  */
-class Main extends \Slrfw\Controller {
-
+class Main extends \Slrfw\Controller
+{
     /**
      *
      * @var \Slrfw\Model\utilisateur
@@ -107,8 +107,7 @@ class Main extends \Slrfw\Controller {
         $hook = new \Slrfw\Hook();
         $hook->setSubdirName('front');
 
-        $hook->javascript = $this->_javascript;
-        $hook->css        = $this->_css;
+        $hook->controller = $this;
 
         $hook->exec('start');
 

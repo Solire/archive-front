@@ -7,15 +7,18 @@ use Slrfw\Registry;
 
 class Middleoffice extends \Slrfw\Controller
 {
-
-    private $_cache = null;
-
     /**
      *
      * @var \Slrfw\Model\gabaritPage
      */
     private $_page = null;
-    
+
+    /**
+     *
+     * @var \Slrfw\Session
+     */
+    protected $_utilisateurAdmin;
+
     /**
      *
      * @var \Slrfw\Model\gabaritManagerOptimized
@@ -37,11 +40,10 @@ class Middleoffice extends \Slrfw\Controller
     public function start()
     {
         parent::start();
-        $this->_cache = Registry::get('cache');
         $this->_utilisateurAdmin = new \Slrfw\Session('back', 'back');
         $this->_gabaritManager = new \Slrfw\Model\gabaritManagerOptimized();
     }
-    
+
     /**
      * Toujours executé avant l'action.
      *
@@ -60,14 +62,41 @@ class Middleoffice extends \Slrfw\Controller
         $this->_css->addLibrary('back/css/bootstrap/bootstrap.min.css', 'screen', false);
         if (isset($_POST["id_gab_page"]) && intval($_POST["id_gab_page"]) > 0) {
             $this->_page = $this->_gabaritManager->getPage(ID_VERSION, ID_API, intval($_POST["id_gab_page"]));
+
+            if ($this->_utilisateurAdmin->isConnected()) {
+                $this->_page->makeVisible = true;
+                $this->_page->makeHidden  = true;
+
+                $hook = new \Slrfw\Hook();
+                $hook->setSubdirName('back');
+
+                $hook->permission     = null;
+                $hook->utilisateur    = $this->_utilisateurAdmin;
+                $hook->visible        = $this->_page->getMeta('visible') == 0 ? 1 : 0;
+                $hook->ids            = $data['id'];
+                $hook->id_version     = ID_VERSION;
+
+                $hook->exec('pagevisible');
+
+                /**
+                 * On récupère la permission du hook,
+                 * on interdit uniquement si la variable a été modifié à false.
+                 */
+                if ($hook->permission === false) {
+                    if ($hook->visible == 1) {
+                        $this->_page->makeVisible = false;
+                    } else {
+                        $this->_page->makeHidden  = false;
+                    }
+                }
+            }
+
             $this->_view->page = $this->_page;
         }
-        
-        $this->_view->currentUrl = $_POST["currentUrl"];
 
-        
+        $this->_view->currentUrl = $_POST["currentUrl"];
     }
-    
+
     /**
      * Dialog pour la configuration des images
      *
@@ -77,7 +106,7 @@ class Middleoffice extends \Slrfw\Controller
     {
         $this->_view->main(false);
     }
-    
+
     /**
      * Dialog pour la modification des zones HTML
      *
