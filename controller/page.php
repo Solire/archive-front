@@ -111,7 +111,9 @@ class Page extends Main
 
     protected function _display()
     {
+        $homepage = false;
         if (empty($this->rew)) {
+            $homepage = true;
             $this->rew[] = 'accueil';
         }
         $this->_parents         = array();
@@ -125,10 +127,18 @@ class Page extends Main
             }
 
             $last = ($ii == count($this->rew) - 1);
-
-            $id_gab_page    = $this->_gabaritManager->getIdByRewriting(
-                ID_VERSION, \Slrfw\FrontController::$idApiRew, $rewriting, $id_parent
-            );
+            
+            /** 
+             * Dans le cas de la homepage, on part du principe que sont id est toujours 1 
+             */
+            if($homepage) {
+                $id_gab_page = 1;
+            } else {
+                $id_gab_page    = $this->_gabaritManager->getIdByRewriting(
+                    ID_VERSION, \Slrfw\FrontController::$idApiRew, $rewriting, $id_parent
+                );
+            }
+            
             if (!$id_gab_page) {
                 $this->pageNotFound();
             }
