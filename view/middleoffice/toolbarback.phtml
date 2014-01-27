@@ -42,7 +42,8 @@
         }
 
         if ($this->utilisateurAdmin->get("niveau") == "solire"
-            || $this->page->getGabarit()->getEditable()
+            || ($this->page->getGabarit()->getEditable()
+                && $this->page->getGabarit()->getEditableMiddleOffice())
         ) {
 ?>
                 <li class="divider-vertical"></li>
@@ -58,7 +59,7 @@
 <?php
     if (isset($this->page) && is_object($this->page)) {
         if ($this->utilisateurAdmin->get("niveau") == "solire"
-            || $this->page->getGabarit()->getEditable()
+            || ($this->page->getGabarit()->getEditable())
         ) {
 ?>
                             <li><a href="back/page/display.html?id_gab_page=<?php echo $this->page->getMeta("id") ?>"><b>Gérer cette page dans le module d'admin</b></a></li>

@@ -60,8 +60,11 @@ class Middleoffice extends \Slrfw\Controller
         $this->_javascript->addLibrary('back/js/bootstrap/bootstrap.min.js');
         $this->_javascript->addLibrary('back/js/main.js');
         $this->_css->addLibrary('back/css/bootstrap/bootstrap.min.css', 'screen', false);
-        if (isset($_POST["id_gab_page"]) && intval($_POST["id_gab_page"]) > 0) {
-            $this->_page = $this->_gabaritManager->getPage(ID_VERSION, ID_API, intval($_POST["id_gab_page"]));
+        if (isset($_POST["id_gab_page"]) 
+                && intval($_POST["id_gab_page"]) > 0
+                && isset($_POST["id_api"]) 
+                && intval($_POST["id_api"])) {
+            $this->_page = $this->_gabaritManager->getPage(ID_VERSION, intval($_POST["id_api"]), intval($_POST["id_gab_page"]));
 
             if ($this->_utilisateurAdmin->isConnected()) {
                 $this->_page->makeVisible = true;
