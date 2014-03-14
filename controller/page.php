@@ -85,7 +85,9 @@ class Page extends Main
         }
 
         $this->shutdown();
-        $this->_view->display('page', $view);
+        $this->_view->setController('page');
+        $this->_view->setAction($view);
+        $this->_view->display();
     }
 
 
@@ -127,9 +129,9 @@ class Page extends Main
             }
 
             $last = ($ii == count($this->rew) - 1);
-            
-            /** 
-             * Dans le cas de la homepage, on part du principe que sont id est toujours 1 
+
+            /**
+             * Dans le cas de la homepage, on part du principe que sont id est toujours 1
              */
             if($homepage) {
                 $id_gab_page = 1;
@@ -138,7 +140,7 @@ class Page extends Main
                     ID_VERSION, \Slrfw\FrontController::$idApiRew, $rewriting, $id_parent
                 );
             }
-            
+
             if (!$id_gab_page) {
                 $this->pageNotFound();
             }
