@@ -208,7 +208,7 @@
                         loadCss("app/back/css/crop.css")
                         loadCss("app/back/css/sticky.css")
 
-                        $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html", {currentUrl : "<?php echo $this->currentUrl; ?>", id_gab_page : <?php echo $this->page->getMeta("id") ?>}, function() {
+                        $("#back-toolbar-container").css({"width": "100%", "z-index": "20000", "position": "fixed"}).load("middleoffice/toolbarback.html", {currentUrl : "<?php echo $this->currentUrl; ?>", id_gab_page : <?php echo $this->page->getMeta("id") ?>, id_api : <?php echo $this->page->getMeta("id_api") ?>}, function() {
                             cloneModalCrop.appendTo("body")
                             loadScript("app/back/js/bootstrap/bootstrap.min.js?admin", function(){
                                 loadScript("app/back/js/crop_front.js");
