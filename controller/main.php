@@ -26,11 +26,11 @@ class Main extends \Slrfw\Controller
      *
      * @var \Slrfw\Model\utilisateur
      */
-    protected $_utilisateurAdmin;
+    public $_utilisateurAdmin;
 
     /**
      *
-     * @var \Slrfw\Model\gabaritManagerOptimized
+     * @var \Slrfw\Model\gabaritManager
      */
     public  $_gabaritManager;
 
@@ -51,7 +51,7 @@ class Main extends \Slrfw\Controller
 
         $this->_view->fil_ariane = null;
 
-        $this->_gabaritManager = new \Slrfw\Model\gabaritManagerOptimized();
+        $this->_gabaritManager = new \Slrfw\Model\gabaritManager();
 
         /**
          * Mode prévisualisation,

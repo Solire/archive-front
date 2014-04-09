@@ -11,13 +11,13 @@ class Page extends Main
      *
      * @var \Slrfw\Model\gabaritPage
      */
-    protected $_page = null;
+    public $_page = null;
 
     /**
      *
      * @var \Slrfw\Model\gabaritPage[]
      */
-    protected $_parents = null;
+    public $_parents = null;
 
     /**
      * Accepte les rewritings
@@ -36,15 +36,23 @@ class Page extends Main
         parent::start();
     }
 
+    /**
+     *
+     *
+     * @return void
+     */
     public function startAction()
     {
         $this->_view->enable(false);
 
-        /** En cas de prévisualisation. */
-        if ($this->_utilisateurAdmin->isConnected() && isset($_POST['id_gabarit'])) {
+        /**
+         * En cas de prévisualisation.
+         */
+        if ($this->_utilisateurAdmin->isConnected()
+            && isset($_POST['id_gabarit'])
+        ) {
             $this->_previsu();
-        }
-        else {
+        } else {
             $this->_display();
             $this->_page->setConnected($this->_utilisateurAdmin->isConnected());
         }
@@ -56,7 +64,9 @@ class Page extends Main
             $this->_parents[1]->setFirstChild($firstChild);
         }
 
-        //Balise META
+        /**
+         * Balise META
+         */
         $this->_seo->setTitle($this->_page->getMeta('bal_title'));
         $this->_seo->setDescription($this->_page->getMeta('bal_descr'));
         $this->_seo->addKeyword($this->_page->getMeta('bal_key'));
@@ -80,9 +90,10 @@ class Page extends Main
         $this->_view->parents   = $this->_parents;
 
         $view = $this->_page->getGabarit()->getName();
-        if (method_exists($this, '_' . $view . 'Gabarit')) {
-            $this->{'_' . $view . 'Gabarit'}();
-        }
+        $hook = new \Slrfw\Hook();
+        $hook->setSubdirName('front');
+        $hook->controller = $this;
+        $hook->exec($view . 'Gabarit');
 
         $this->shutdown();
         $this->_view->setController('page');
