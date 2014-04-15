@@ -179,4 +179,51 @@ class Page extends Main
             $id_parent      = $id_gab_page;
         }
     }
+
+    public function rubriqueAction()
+    {
+        $this->onlyAjax();
+
+        $rubriqueId = $this->_gabaritManager->getIdByRewriting(ID_VERSION, 2, $_GET['rew']);
+        $this->_view->rubrique = $this->_gabaritManager->getPage(ID_VERSION, 2, $rubriqueId, false, false, true);
+
+        $marques = array();
+        $marquesTmp = $this->_gabaritManager->getList(ID_VERSION,
+            2, $rubriqueId, false, true);
+
+        foreach ($marquesTmp as $marque) {
+            $gammes = array();
+
+            if ($marque->getMeta('nbre_enfants') > 0) {
+                $gammesTmp = $this->_gabaritManager->getList(ID_VERSION,
+                    2, $marque->getMeta('id'), false, true);
+                foreach ($gammesTmp as $gamme) {
+                    if ($gamme->getMeta('nbre_enfants') > 0) {
+                        $gammes[] = $gamme;
+                    }
+                }
+            }
+
+            if (!empty($gammes)) {
+                $marque->setChildren($gammes);
+                $marques[] = $marque;
+            }
+        }
+
+        $this->_view->marques = $marques;
+
+        $this->_view->enable(false);
+        $this->_view->main(false);
+
+        ob_start();
+        $this->_view->display();
+        $html = ob_get_clean();
+
+        $response = array(
+            'status'    => 'success',
+            'html'      => $html,
+        );
+
+        echo json_encode($response);
+    }
 }
