@@ -40,8 +40,7 @@ class Main extends \Slrfw\Controller
      * @return void
      * @hook front/ shutdown Avant l'inclusion de la vue
      */
-    public function start()
-    {
+    public function start() {
         parent::start();
 
         $this->_seo->setTitle($this->_mainConfig->get("project", "name"));
