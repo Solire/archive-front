@@ -56,7 +56,7 @@ class Middleoffice extends \Slrfw\Controller
             $this->_view->site = Registry::get('project-name');
             $this->_view->modePrevisualisation = $_SESSION["mode_previsualisation"];
         }
-        $this->_view->main(false);
+        $this->_view->unsetMain();
         $this->_javascript->addLibrary('back/js/bootstrap/bootstrap.min.js');
         $this->_javascript->addLibrary('back/js/main.js');
         $this->_css->addLibrary('back/css/bootstrap/bootstrap.min.css', 'screen', false);
@@ -107,7 +107,7 @@ class Middleoffice extends \Slrfw\Controller
      */
     public function imageconfiguratorAction()
     {
-        $this->_view->main(false);
+        $this->_view->unsetMain();
     }
 
     /**
@@ -117,7 +117,7 @@ class Middleoffice extends \Slrfw\Controller
      */
     public function htmleditorAction()
     {
-        $this->_view->main(false);
+        $this->_view->unsetMain();
     }
 
 }

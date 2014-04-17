@@ -9,7 +9,7 @@ class Sitemap extends Main
     public function startAction()
     {
         global $pagesResult;
-        $this->_view->main(false);
+        $this->_view->unsetMain();
 
         $visible = TRUE;
         if (isset($_GET['visible']) && $_GET['visible'] == 0) {
