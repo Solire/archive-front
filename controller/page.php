@@ -43,8 +43,6 @@ class Page extends Main
      */
     public function startAction()
     {
-        $this->_view->enable(false);
-
         /**
          * En cas de prévisualisation.
          */
@@ -95,10 +93,7 @@ class Page extends Main
         $hook->controller = $this;
         $hook->exec($view . 'Gabarit');
 
-        $this->shutdown();
-        $this->_view->setController('page');
-        $this->_view->setAction($view);
-        $this->_view->display();
+        $this->_view->setViewPath('page' . DS . $view);
     }
 
 
