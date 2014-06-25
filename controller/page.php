@@ -160,10 +160,13 @@ class Page extends Main
 
             $this->_fullRewriting[]     = $rewriting;
 
-            $this->_view->breadCrumbs[]  = array(
+            $breadCrumbs = array(
                 'label'    => $page->getMeta('titre'),
-                'url'      => implode('/', $this->_fullRewriting) . '/',
             );
+            if ($page->getGabarit()->getView()) {
+                $breadCrumbs['url'] = implode('/', $this->_fullRewriting) . '/';
+            }
+            $this->_view->breadCrumbs[] = $breadCrumbs;
 
             if ($last) {
                 $this->_page        = $page;
