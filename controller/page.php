@@ -166,8 +166,14 @@ class Page extends Main
 
             $this->_fullRewriting[]     = $rewriting;
 
-            $breadCrumbs = array(
-                'label' => $page->getMeta('titre'),
+
+            $url = implode('/', $this->_fullRewriting)
+                 . $page->getGabarit()->getExtension();
+            
+            $this->_view->breadCrumbs[]  = array(
+                'label'    => $page->getMeta('titre'),
+                'url'      => $url,
+                'view'     => $page->getGabarit()->getView()
             );
             if ($page->getGabarit()->getView()) {
                 $breadCrumbs['url'] = implode('/', $this->_fullRewriting) . '/';
