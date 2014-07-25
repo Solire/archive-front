@@ -52,17 +52,17 @@
     <body role="document"  itemscope itemtype="http://schema.org/WebPage">
 <?php
     if ($this->utilisateurAdmin->isConnected() && !$this->modePrevisuPage && !isset($_GET['mercury_frame'])) {
-        $this->add("middleoffice/toolbar.phtml");
+        $this->add('middleoffice/toolbar');
     }
 ?>
 
 
         <header role="banner">
-            <?php $this->add("menu.phtml"); ?>
+            <?php $this->add('menu'); ?>
         </header>
         <!-- End header -->
 
-        <div class="ariane" itemprop="breadcrumb"><?php $this->add("breadcrumbs.phtml"); ?></div>
+        <div class="ariane" itemprop="breadcrumb"><?php $this->add('breadcrumbs'); ?></div>
 
 
         <?php $this->content(); ?>

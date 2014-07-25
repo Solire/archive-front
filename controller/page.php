@@ -11,13 +11,13 @@ class Page extends Main
      *
      * @var \Slrfw\Model\gabaritPage
      */
-    protected $_page = null;
+    public $_page = null;
 
     /**
      *
      * @var \Slrfw\Model\gabaritPage[]
      */
-    protected $_parents = null;
+    public $_parents = null;
 
     /**
      * Accepte les rewritings
@@ -36,15 +36,21 @@ class Page extends Main
         parent::start();
     }
 
+    /**
+     *
+     *
+     * @return void
+     */
     public function startAction()
     {
-        $this->_view->enable(false);
-
-        /** En cas de prévisualisation. */
-        if ($this->_utilisateurAdmin->isConnected() && isset($_POST['id_gabarit'])) {
+        /**
+         * En cas de prévisualisation.
+         */
+        if ($this->_utilisateurAdmin->isConnected()
+            && isset($_POST['id_gabarit'])
+        ) {
             $this->_previsu();
-        }
-        else {
+        } else {
             $this->_display();
             $this->_page->setConnected($this->_utilisateurAdmin->isConnected());
         }
@@ -56,7 +62,9 @@ class Page extends Main
             $this->_parents[1]->setFirstChild($firstChild);
         }
 
-        //Balise META
+        /**
+         * Balise META
+         */
         $this->_seo->setTitle($this->_page->getMeta('bal_title'));
         $this->_seo->setDescription($this->_page->getMeta('bal_descr'));
         $this->_seo->addKeyword($this->_page->getMeta('bal_key'));
@@ -80,14 +88,12 @@ class Page extends Main
         $this->_view->parents   = $this->_parents;
 
         $view = $this->_page->getGabarit()->getName();
-        if (method_exists($this, '_' . $view . 'Gabarit')) {
-            $this->{'_' . $view . 'Gabarit'}();
-        }
+        $hook = new \Slrfw\Hook();
+        $hook->setSubdirName('front');
+        $hook->controller = $this;
+        $hook->exec($view . 'Gabarit');
 
-        $this->shutdown();
-        $this->_view->setController('page');
-        $this->_view->setAction($view);
-        $this->_view->display();
+        $this->_view->setViewPath('page' . DS . $view);
     }
 
 
@@ -104,10 +110,13 @@ class Page extends Main
 
             $this->_fullRewriting[] = $parent->getMeta('rewriting') . '/';
 
-            $this->_view->breadCrumbs[] = array(
+            $breadCrumbs = array(
                 'label' => $parent->getMeta('titre'),
-                'url'   => implode('/', $this->_fullRewriting) . '/',
             );
+            if ($parent->getGabarit()->getView()) {
+                $breadCrumbs['url'] = implode('/', $this->_fullRewriting) . '/';
+            }
+            $this->_view->breadCrumbs[] = $breadCrumbs;
         }
     }
 
@@ -131,13 +140,15 @@ class Page extends Main
             $last = ($ii == count($this->rew) - 1);
 
             /**
-             * Dans le cas de la homepage, on part du principe que sont id est toujours 1
+             * Dans le cas de la homepage, on part du principe que sont id est
+             * toujours 1
              */
             if($homepage) {
                 $id_gab_page = 1;
             } else {
-                $id_gab_page    = $this->_gabaritManager->getIdByRewriting(
-                    ID_VERSION, \Slrfw\FrontController::$idApiRew, $rewriting, $id_parent
+                $id_gab_page = $this->_gabaritManager->getIdByRewriting(
+                    ID_VERSION, \Slrfw\FrontController::$idApiRew, $rewriting,
+                    $id_parent
                 );
             }
 
@@ -145,8 +156,9 @@ class Page extends Main
                 $this->pageNotFound();
             }
 
-            $page           = $this->_gabaritManager->getPage(
-                ID_VERSION, \Slrfw\FrontController::$idApiRew, $id_gab_page, 0, $last, true
+            $page = $this->_gabaritManager->getPage(
+                ID_VERSION, \Slrfw\FrontController::$idApiRew, $id_gab_page, 0,
+                $last, true
             );
             if (!$page) {
                 $this->pageNotFound();
@@ -154,15 +166,24 @@ class Page extends Main
 
             $this->_fullRewriting[]     = $rewriting;
 
+            if ($page->getGabarit()->getView()) {
+                $url = implode('/', $this->_fullRewriting)
+                    . $page->getGabarit()->getExtension();
+            } else {
+                $url = '';
+            }
+            
+            
             $this->_view->breadCrumbs[]  = array(
                 'label'    => $page->getMeta('titre'),
-                'url'      => implode('/', $this->_fullRewriting) . '/',
+                'url'      => $url,
+                'view'     => $page->getGabarit()->getView()
             );
 
             if ($last) {
-                $this->_page        = $page;
+                $this->_page      = $page;
             } else {
-                $this->_parents[]   = $page;
+                $this->_parents[] = $page;
             }
 
             $id_parent      = $id_gab_page;
