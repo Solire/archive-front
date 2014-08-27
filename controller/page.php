@@ -69,7 +69,7 @@ class Page extends Main
         /**
          * Balise META
          */
-        $this->_seo->setTitle($this->_page->getMeta('bal_title'));
+        $this->_seo->setTitle($this->_page->getMeta('bal_title') ? $this->_page->getMeta('bal_title') : $this->_page->getMeta('titre'));
         $this->_seo->setDescription($this->_page->getMeta('bal_descr'));
         $this->_seo->addKeyword($this->_page->getMeta('bal_key'));
         $this->_seo->setUrlCanonical($this->_page->getMeta('canonical'));
