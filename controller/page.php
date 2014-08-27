@@ -55,6 +55,10 @@ class Page extends Main
             $this->_page->setConnected($this->_utilisateurAdmin->isConnected());
         }
 
+        if (!$this->_page->getGabarit()->getView()) {
+            $this->pageNotFound();
+        }
+
         if (isset($this->_parents[1])) {
             $firstChild = $this->_gabaritManager->getFirstChild(
                 ID_VERSION, $this->_parents[1]->getMeta('id')
@@ -172,8 +176,8 @@ class Page extends Main
             } else {
                 $url = '';
             }
-            
-            
+
+
             $this->_view->breadCrumbs[]  = array(
                 'label'    => $page->getMeta('titre'),
                 'url'      => $url,
