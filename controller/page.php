@@ -1,49 +1,38 @@
 <?php
 
-namespace App\Front\Controller;
+namespace App\Front\controller;
 
-use Slrfw\Registry;
-
+use Slrfw\FrontController;
+use Slrfw\Hook;
+use Slrfw\Model\gabaritPage;
 
 class Page extends Main
 {
     /**
-     *
-     * @var \Slrfw\Model\gabaritPage
+     * @var gabaritPage
      */
     public $_page = null;
 
     /**
-     *
-     * @var \Slrfw\Model\gabaritPage[]
+     * @var gabaritPage[]
      */
     public $_parents = null;
 
     /**
-     * Accepte les rewritings
+     * Accepte les rewritings.
      *
-     * @var boolean
+     * @var bool
      */
     public $acceptRew = true;
 
     /**
-     * Toujours executé avant l'action.
-     *
-     * @return void
-     */
-    public function start()
-    {
-        parent::start();
-    }
-
-    /**
-     *
+     * Affichage de page "gab_page".
      *
      * @return void
      */
     public function startAction()
     {
-        /**
+        /*
          * En cas de prévisualisation.
          */
         if ($this->_utilisateurAdmin->isConnected()
@@ -66,7 +55,7 @@ class Page extends Main
             $this->_parents[1]->setFirstChild($firstChild);
         }
 
-        /**
+        /*
          * Balise META
          */
         $this->_seo->setTitle($this->_page->getMeta('bal_title') ? $this->_page->getMeta('bal_title') : $this->_page->getMeta('titre'));
@@ -76,7 +65,7 @@ class Page extends Main
         if ($this->_page->getMeta('author') > 0) {
             $authors = $this->_view->mainPage['element_commun']->getBlocs('author_google')->getValues();
             foreach ($authors as $author) {
-                if($author['id'] == $this->_page->getMeta('author')) {
+                if ($author['id'] == $this->_page->getMeta('author')) {
                     $this->_seo->setAuthor($author['compte_google']);
                     $this->_seo->setAuthorName($author['nom_de_lauteur']);
                     break;
@@ -88,11 +77,11 @@ class Page extends Main
             $this->_seo->disableIndex();
         }
 
-        $this->_view->page      = $this->_page;
-        $this->_view->parents   = $this->_parents;
+        $this->_view->page = $this->_page;
+        $this->_view->parents = $this->_parents;
 
         $view = $this->_page->getGabarit()->getName();
-        $hook = new \Slrfw\Hook();
+        $hook = new Hook();
         $hook->setSubdirName('front');
         $hook->controller = $this;
         $hook->exec($view . 'Gabarit');
@@ -100,7 +89,11 @@ class Page extends Main
         $this->_view->setViewPath('page' . DS . $view);
     }
 
-
+    /**
+     * Affichage de prévisualisation.
+     *
+     * @return void
+     */
     protected function _previsu()
     {
         $this->_page = $this->_gabaritManager->previsu($_POST);
@@ -114,9 +107,9 @@ class Page extends Main
 
             $this->_fullRewriting[] = $parent->getMeta('rewriting') . '/';
 
-            $breadCrumbs = array(
+            $breadCrumbs = [
                 'label' => $parent->getMeta('titre'),
-            );
+            ];
             if ($parent->getGabarit()->getView()) {
                 $breadCrumbs['url'] = implode('/', $this->_fullRewriting) . '/';
             }
@@ -124,6 +117,11 @@ class Page extends Main
         }
     }
 
+    /**
+     * Affichage d'une page selon les données de BDD.
+     *
+     * @return void
+     */
     protected function _display()
     {
         $homepage = false;
@@ -131,10 +129,10 @@ class Page extends Main
             $homepage = true;
             $this->rew[] = 'accueil';
         }
-        $this->_parents         = array();
-        $this->_fullRewriting   = array();
+        $this->_parents = [];
+        $this->_fullRewriting = [];
 
-        $id_parent = 0 ;
+        $id_parent = 0;
 
         foreach ($this->rew as $ii => $rewriting) {
             if (!$rewriting) {
@@ -143,15 +141,15 @@ class Page extends Main
 
             $last = ($ii == count($this->rew) - 1);
 
-            /**
+            /*
              * Dans le cas de la homepage, on part du principe que sont id est
              * toujours 1
              */
-            if($homepage) {
+            if ($homepage) {
                 $id_gab_page = 1;
             } else {
                 $id_gab_page = $this->_gabaritManager->getIdByRewriting(
-                    ID_VERSION, \Slrfw\FrontController::$idApiRew, $rewriting,
+                    ID_VERSION, FrontController::$idApiRew, $rewriting,
                     $id_parent
                 );
             }
@@ -161,14 +159,14 @@ class Page extends Main
             }
 
             $page = $this->_gabaritManager->getPage(
-                ID_VERSION, \Slrfw\FrontController::$idApiRew, $id_gab_page, 0,
+                ID_VERSION, FrontController::$idApiRew, $id_gab_page, 0,
                 $last, true
             );
             if (!$page) {
                 $this->pageNotFound();
             }
 
-            $this->_fullRewriting[]     = $rewriting;
+            $this->_fullRewriting[] = $rewriting;
 
             if ($page->getGabarit()->getView()) {
                 $url = implode('/', $this->_fullRewriting)
@@ -177,20 +175,19 @@ class Page extends Main
                 $url = '';
             }
 
-
-            $this->_view->breadCrumbs[]  = array(
-                'label'    => $page->getMeta('titre'),
-                'url'      => $url,
-                'view'     => $page->getGabarit()->getView()
-            );
+            $this->_view->breadCrumbs[] = [
+                'label' => $page->getMeta('titre'),
+                'url' => $url,
+                'view' => $page->getGabarit()->getView(),
+            ];
 
             if ($last) {
-                $this->_page      = $page;
+                $this->_page = $page;
             } else {
                 $this->_parents[] = $page;
             }
 
-            $id_parent      = $id_gab_page;
+            $id_parent = $id_gab_page;
         }
     }
 }
